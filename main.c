@@ -81,11 +81,9 @@ void test_struct() {
 	printf("db.db1 address is %p\n", &db.db1);
 	printf("db.db2 address is %p\n", &db.db2);
 	printf("db.db64 value is 0x%llx\n", *(u64 *)(&db));
-
 }
 
 void test_union() {
-
 	union doorbell {
 	u64 db64;
 	u32 db32[2];
@@ -109,7 +107,6 @@ void test_owner_bit() {
 	u32 nreq = 0;
 	u16 owner_bit = 0;
 	u32 wqe_idx;
-
 
 	for (nreq = 0; nreq < 128; nreq++) {
 		wqe_idx = (head + nreq) & (wqe_cnt - 1);
@@ -140,7 +137,6 @@ void test_char() {
 }
 
 void test_merge(){
-
 	int intervalsSize = 2;
 	int intervalsColSize = 2;
  	int returnSize = 0;
@@ -156,7 +152,6 @@ void test_merge(){
 }
 
 void test_merge_null(){
-
 	int intervalsSize = 1;
 	int intervalsColSize = 2;
  	int returnSize = 0;
@@ -170,8 +165,7 @@ void test_merge_null(){
 	merge(intervals, intervalsSize, &intervalsColSize, &returnSize, &returnColumnSizes); 
 }
 
-void test_longeststr()
-{
+void test_longeststr() {
 	//char s[] = "jftaefjfeatsjfia";
 	char s[] = "babad";
 	char* a;
@@ -179,10 +173,32 @@ void test_longeststr()
 	printf("%s\n", a);
 }
 
+void test_division_evaluation(){
+	int eqsize = 2;
+	int eqcolsize = 2;
+	char* eq[eqsize][eqcolsize] = [["a","b"],["b","c"]];
+	int valsize = 2;
+	double val[valsize] = [2.0, 3.0];
+	int querysize = 5;
+	int querycolsize = 2;
+	char* query[querysize][querycolsize] = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]];
+	int returnsize = 0;
+	double* returnarray;
+
+	returnarray = calcEquation(eq, eqsize, eqcolsize, val, valsize, query,
+				   querysize, querycolsize, &returnsize);
+
+	for(int i = 0; i < returnsize; i++)
+		printf("returnarray: %f", returnarray[i]);
+
+	free(returnarray);
+}
+
 int main() {
 
 //	test_longeststr();
-	strlabel();
+//	strlabel();
+	test_division_evaluation();
 	return 0;
 }
 
