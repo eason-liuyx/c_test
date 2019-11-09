@@ -176,17 +176,17 @@ void test_longeststr() {
 void test_division_evaluation(){
 	int eqsize = 2;
 	int eqcolsize = 2;
-	char* eq[eqsize][eqcolsize] = [["a","b"],["b","c"]];
+	char* eq[][2]= {{"a","b"}, {"b","c"}};
 	int valsize = 2;
-	double val[valsize] = [2.0, 3.0];
+	double val[] = {2.0, 3.0};
 	int querysize = 5;
 	int querycolsize = 2;
-	char* query[querysize][querycolsize] = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]];
+	char* query[][2] = {{"a","c"},{"b","a"},{"a","e"},{"a","a"},{"x","x"}};
 	int returnsize = 0;
 	double* returnarray;
 
-	returnarray = calcEquation(eq, eqsize, eqcolsize, val, valsize, query,
-				   querysize, querycolsize, &returnsize);
+	returnarray = calcEquation(eq, eqsize, &eqcolsize, val, valsize, query,
+				   querysize, &querycolsize, &returnsize);
 
 	for(int i = 0; i < returnsize; i++)
 		printf("returnarray: %f", returnarray[i]);
