@@ -24,7 +24,7 @@ struct strgraph {
 };
 
 struct nodestr {
-	char* a;
+	char a[10];
 };
 
 double* calcEquation(char*** equations, int equationsSize, int* eqationsColSize,
@@ -35,7 +35,7 @@ double* calcEquation(char*** equations, int equationsSize, int* eqationsColSize,
 	double* retArr;
 	int edge1, edge2;
 	int i, j, k;
-	int node;
+	int node = 0;
 
 	if (equationsSize == 0)
 		return NULL;

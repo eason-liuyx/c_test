@@ -185,8 +185,8 @@ void test_division_evaluation(){
 	int returnsize = 0;
 	double* returnarray;
 
-	returnarray = calcEquation(eq, eqsize, &eqcolsize, val, valsize, query,
-				   querysize, &querycolsize, &returnsize);
+//	returnarray = calcEquation(eq, eqsize, &eqcolsize, val, valsize, query,
+//				   querysize, &querycolsize, &returnsize);
 
 	for(int i = 0; i < returnsize; i++)
 		printf("returnarray: %f", returnarray[i]);
@@ -198,7 +198,7 @@ int main() {
 
 //	test_longeststr();
 //	strlabel();
-	test_division_evaluation();
+
 	return 0;
 }
 
