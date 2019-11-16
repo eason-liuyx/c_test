@@ -1,5 +1,6 @@
-#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 /**
@@ -125,5 +126,54 @@ double* calcEquation(char*** equations, int equationsSize, int* eqationsColSize,
 	}
 
 	return retArr;
+}
+
+static bool check(int* nums, int numssize, int temp, int target, int k, int idx,
+		  int* used)
+{
+	if (k == 0)
+		return true;
+
+	if (temp == target)
+		return check(nums, numssize, 0, target, k - 1, 0, used);
+
+	for (int i = idx; i < numssize; i++) {
+		if (used[i] == 1)
+			continue;
+
+		used[i] = 1;
+		temp += nums[i];
+		if (temp <= target &&
+		    check(nums, numssize, temp, target, k, idx + 1, used))
+			return true;
+		used[i] = 0;
+	}
+
+	return false;
+}
+
+bool canPartitionKSubsets(int* nums, int numssize, int k){
+	int sum = 0;
+	int maxval = 0;
+	int temp = 0;	/* the current value of the sum of a subset */
+
+	if (numssize == 1 && k == 1)
+		return true;
+	
+	for (int i = 0; i < numssize; i++) {
+		maxval =  nums[i] > maxval? nums[i] : maxval;
+		sum += nums[i];
+	}
+
+	if (sum % k != 0)
+		return false;
+
+	int target = sum / k;
+	if (maxval > target)
+		return false;
+	
+	int used[numssize];
+	memset(used, 0 , numssize * sizeof(int));
+	return check(nums, numssize, temp, target, k, 0, used);
 }
 

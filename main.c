@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -194,10 +195,34 @@ void test_division_evaluation(){
 	free(returnarray);
 }
 
+
+#define ARRAY_SIZE 16
+void test_partitionK(){
+
+	int array[ARRAY_SIZE];
+	int arraysize = 0;
+	int k;
+	bool ret;
+
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		scanf("%d", array + i);
+		arraysize++;
+//		printf("%d", array[i]);
+		if (getchar() == '\n')
+			break;
+	}
+
+	scanf("%d", &k);
+	ret = canPartitionKSubsets(array, arraysize, k);
+	printf("%s", ret ? "true" : "false");
+}
+
 int main() {
 
 //	test_longeststr();
 //	strlabel();
+
+	test_partitionK();
 
 	return 0;
 }
