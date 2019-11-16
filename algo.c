@@ -142,9 +142,8 @@ static bool check(int* nums, int numssize, int temp, int target, int k, int idx,
 			continue;
 
 		used[i] = 1;
-		temp += nums[i];
-		if (temp <= target &&
-		    check(nums, numssize, temp, target, k, idx + 1, used))
+		if (temp + nums[i] <= target &&
+		    check(nums, numssize, temp + nums[i], target, k, idx + 1, used))
 			return true;
 		used[i] = 0;
 	}
