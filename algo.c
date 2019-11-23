@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include "common.h"
 
 /**
  * Title: division evaluation 399
@@ -158,7 +160,7 @@ bool canPartitionKSubsets(int* nums, int numssize, int k){
 
 	if (numssize == 1 && k == 1)
 		return true;
-	
+
 	for (int i = 0; i < numssize; i++) {
 		maxval =  nums[i] > maxval? nums[i] : maxval;
 		sum += nums[i];
@@ -170,9 +172,164 @@ bool canPartitionKSubsets(int* nums, int numssize, int k){
 	int target = sum / k;
 	if (maxval > target)
 		return false;
-	
+
 	int used[numssize];
 	memset(used, 0 , numssize * sizeof(int));
 	return check(nums, numssize, temp, target, k, 0, used);
+}
+
+struct stack* stack_init() {
+	struct stack* stack = (struct stack*)malloc(sizeof(struct stack));
+	if (!stack)
+		return NULL;
+
+	stack->bottom = NULL;
+	stack->top = NULL;
+	stack->size = 0;
+
+	return stack;
+}
+
+int stack_empty(struct stack* stack) {
+	if (stack->size == 0)
+		return 1;
+
+	return 0;
+}
+
+void stack_in(struct stack* stack, struct treenode *tnode) {
+	struct singlenode* snode =
+			(struct singlenode*)malloc(sizeof(struct singlenode));
+
+	if (!snode)
+		return;
+
+	snode->data = tnode;
+	if (stack_empty(stack)) {
+		snode->next = NULL;
+		stack->bottom = snode;
+		stack->top = snode;
+	} else {
+		snode->next = stack->top;
+		stack->top = snode;
+	}
+	stack->size += 1;
+}
+
+struct treenode* stack_out(struct stack* stack) {
+	if (stack_empty(stack))
+		return NULL;
+
+	struct singlenode* snode = stack->top;
+	struct treenode* tnode = snode->data;
+
+	stack->top = snode->next;
+	stack->size -= 1;
+
+	return tnode;
+}
+
+/* DFS: depth first search */
+void dfs(struct treenode* root, int* depth) {
+	if (!root)
+		return;
+
+	struct stack* stack = stack_init();
+
+	stack_in(stack, root);
+	while (!stack_empty(stack)) {
+		struct treenode* tnode = stack_out(stack);
+		(*depth)++;
+		printf("%d\n", tnode->val);
+
+		if (!tnode->right)
+			stack_in(stack, tnode->right);
+
+		if (!tnode->left)
+			stack_in(stack, tnode->left);
+	}
+}
+
+/* Preorder traversal binary tree */
+void pretraversal(struct treenode* root, int* depth) {
+	if (root) {
+		(*depth)++;
+		pretraversal(root->left, depth);
+		pretraversal(root->right, depth);
+	}
+}
+
+/**
+ * Return an array of arrays of size *returnsize.
+ * The sizes of the arrays are returned as *returncolumnsize array.
+ * Note: Both returned array and *columnsizes array must be malloced,
+ * assume caller calls free().
+ */
+
+/* DFS should be selected */
+
+void search(struct treenode* root, int sum, int*returnsize, int**
+	    returncolumnsizes, int** result, int* temp, int bufsize) {
+	if (root == NULL);
+		return;
+
+	if (root->left == NULL && root->right == NULL && sum == root->val) {
+		temp[bufsize++] = root->val;
+		int c = *returnsize;
+		(*returncolumnsizes)[*returnsize] = bufsize;
+		result[c] = (int*)malloc(sizeof(int) * bufsize);
+		for (int i = 0; i < bufsize; ++i)
+			result[c][i] = temp[i];
+
+		(*returnsize)++;
+	}
+
+	temp[bufsize++] = root->val;
+	sum -= root->val;
+	search(root->left,sum,returnsize,returncolumnsizes,result,temp,bufsize);
+	search(root->right,sum,returnsize,returncolumnsizes,result,temp,bufsize);
+}
+
+int** pathSum(struct treenode* root, int sum, int* returnsize,
+	      int** returncolumnsizes) {
+
+	int depth = 0;
+	int pathnum = 0;
+
+//	pretraversal(root, &depth);
+
+//	pathnum = 2^(depth - 1);
+
+//	int** result = (int**)malloc(pathnum * depth * sizeof(int*));
+//	(*returncolumnsizes) = (int*)malloc(pathnum * sizeof(int));
+//	*returnsize = 0;
+
+	int** result = (int**)malloc(sizeof(int*) * 1024);
+	(*returncolumnsizes) = (int*)malloc(sizeof(int) * 1024);
+	*returnsize = 0;
+	if (!root)
+		return result;
+/*
+	struct stack* stack = stack_init();
+
+	stack_in(root);
+	while (!stack_empty(root)) {
+		struct treenode* tnode = stack_out(stack);
+		temp += tnode->val;
+
+		if (temp == sum)
+			continue;
+
+		if (!tnode->right)
+			stack_in(stack, tnode->right);
+
+		if (!tnode->left)
+			stack_in(stack, tnode->left);
+	}
+*/
+
+	int* temp = (int*)malloc(depth * sizeof(int));
+	search(root, sum, returnsize, returncolumnsizes, result, temp, 0);
+	return result;
 }
 
