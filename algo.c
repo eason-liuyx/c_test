@@ -178,6 +178,47 @@ bool canPartitionKSubsets(int* nums, int numssize, int k){
 	return check(nums, numssize, temp, target, k, 0, used);
 }
 
+struct TreeNode* __create_tree(int* data, int index, int n) {
+	struct TreeNode* node = NULL;
+
+	if (index < n && data[index] != -1) {
+		node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+		if (node == NULL)
+			return NULL;
+
+		node->val = data[index];
+		node->left = __create_tree(data, 2 * index + 1, n);
+		node->right = __create_tree(data, 2 * index + 2, n);
+	}
+	return node;
+}
+
+void pretraversal(struct TreeNode* root, int* depth);
+void dfs(struct TreeNode* root, int* depth);
+struct TreeNode* create_tree(struct TreeNode* root) {
+	int input[TREE_NODE_MAX_NUM];
+	int count;
+	int depth;
+	int val;
+	char ch;
+	int i = 0;
+
+	for (i = 0; i < TREE_NODE_MAX_NUM; i++)
+	{
+		scanf("%d", &input[i]);
+		count++;
+
+		ch = getchar();
+		if (ch == '\n')
+			break;
+	}
+
+//		printf("%d", input[i]);
+	root = __create_tree(input, 0, count);
+//	dfs(root, &depth);
+	pretraversal(root, &depth);
+}
+
 void traverse_bitree(struct TreeNode* root, int *node_num){
 	(*node_num)++;
 	if (!root)
@@ -532,6 +573,7 @@ void dfs(struct TreeNode* root, int* depth) {
 void pretraversal(struct TreeNode* root, int* depth) {
 	if (root) {
 		(*depth)++;
+		printf("%d", root->val);
 		pretraversal(root->left, depth);
 		pretraversal(root->right, depth);
 	}

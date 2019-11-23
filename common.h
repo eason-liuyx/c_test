@@ -2,6 +2,9 @@
 #define MAX_WD_LEN	16
 #define MAX_STR_LEN	512
 
+#define TREE_NODE_MAX_NUM 1024
+#define TREE_NODE_MAX_VALUE 0xF
+
 #define max(a, b)  (a) > (b) ? (a) : (b)
 
 struct TreeNode {
@@ -22,6 +25,7 @@ struct stack {
 	int size;
 };
 
+struct TreeNode* create_tree(struct TreeNode* root);
 int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	      int** returncolumnsizes);
 bool canPartitionKSubsets(int* nums, int numssize, int k);

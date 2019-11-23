@@ -217,12 +217,15 @@ void test_partitionK(){
 	printf("%s", ret ? "true" : "false");
 }
 
+void test_create_tree() {
+	struct TreeNode* root;
+
+	create_tree(root);
+}
+
 int main() {
 
-//	test_longeststr();
-//	strlabel();
-
-	test_partitionK();
+	test_create_tree();
 
 	return 0;
 }
