@@ -178,6 +178,284 @@ bool canPartitionKSubsets(int* nums, int numssize, int k){
 	return check(nums, numssize, temp, target, k, 0, used);
 }
 
+void traverse_bitree(struct TreeNode* root, int *node_num){
+	(*node_num)++;
+	if (!root)
+		return;
+
+	traverse_bitree(root->left, node_num);
+	traverse_bitree(root->right, node_num);
+}
+
+void serial_bitree(struct TreeNode* root, int* array){
+	if (!root) {
+		*array = 0;
+		return;
+	}
+
+	*array = root->val;
+	traverse_bitree(root->left, array + 1);
+	traverse_bitree(root->right, array + 2);
+}
+
+struct TreeNode** findDuplicateSubtrees(struct TreeNode* root, int* returnSize){
+	int node_num = 0;
+
+	traverse_bitree(root, &node_num);
+
+	int* array_list = calloc(node_num, sizeof(int));
+
+	serial_bitree(root, array_list);
+}
+
+int** sort_interval(int** intervals, int intervalsSize){
+	int tmpstart, tmpend;
+	int curstart, nextstart;
+	for (int i = 0; i < intervalsSize - 1; i++){
+		curstart = intervals[i][0];
+		nextstart = intervals[i + 1][0];
+
+		if (curstart > nextstart){
+		tmpstart = intervals[i][0];
+		tmpend = intervals[i][1];
+		intervals[i][0] = intervals[i + 1][0];
+		intervals[i][1] = intervals[i + 1][1];
+		intervals[i + 1][0] = tmpstart;
+		intervals[i + 1][1] = tmpend;
+		}
+	}
+	return intervals;
+}
+
+int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes){
+	int mergecnt = 0;
+	int k = 0;
+	int i;
+	printf("intervalsSize is %d, intervalcolsize is %d\n", intervalsSize, *intervalsColSize);
+	if (intervalsSize == 1) {
+		printf("coming here\n");
+		int** array = (int **)malloc(sizeof(int *));
+		array[0] = malloc(sizeof(int) * 2);
+		array[0] = intervals[0];
+		return array;
+	}
+
+	intervals = sort_interval(intervals, intervalsSize); //排序
+
+	for (i = 0; i < intervalsSize; i++){
+		printf("original inter[%d], %d, %d\n", i, intervals[i][0], intervals[i][1]);
+	}
+
+	//merge interval
+	int curend, nextstart;
+	for (i = 0; i < intervalsSize - 1; i++){
+		curend = intervals[i][1];
+		nextstart = intervals[i + 1][0];
+		if (curend >= nextstart){
+			intervals[i + 1][0] = intervals[i][0];
+			intervals[i + 1][1] = max(intervals[i][1], intervals[i + 1][1]);
+			intervals[i][0] = -1; // will be deleted
+			mergecnt++;
+		}
+	}
+
+	for (i = 0; i < intervalsSize; i++){
+		printf("after merge inter[%d], %d, %d\n", i, intervals[i][0], intervals[i][1]);
+	}
+
+	int retsz = intervalsSize - mergecnt;    // 行数
+
+	//malloc array
+	int** array = (int **)malloc(sizeof(int *) * retsz);
+	int* retcolsz = (int *)malloc(sizeof(int) * retsz);
+	for (int j = 0; j < retsz; j++){
+		array[j] = malloc(sizeof(int) * 2);
+		retcolsz[j] = 2;
+	}
+
+	//fill array
+	for (i = 0; i < intervalsSize && k < retsz; i++){
+		if (intervals[i][0] != (-1)) {
+			array[k][0] = intervals[i][0];
+			array[k][1] = intervals[i][1];
+			k++;
+		}
+	}
+
+	*returnSize = retsz;
+	*returnColumnSizes = retcolsz;
+
+	for (k = 0; k < retsz; k++) {
+		printf("array[%d], %d, %d\n", k, array[k][0], array[k][1]);
+		printf("returncolSizes, %d\n", (*returnColumnSizes)[k]);
+	}
+
+	printf("returnSize %d\n", *returnSize);
+
+	return array;
+}
+
+char * longestPalindrome(char* s){
+	int mirroridx1 = 0;
+	int mirroridx2 = 0;
+	int eq_len1 = 0;
+	int eq_len2 = 0;
+	int max_len1 = 0;
+	int max_len2 = 0;
+	int right = 0;
+	int slen = strlen(s);
+
+	printf("%d\n", slen);
+	/* even case: similar as bb */
+	for (int i = 0; i < slen - 1; i++) {
+		eq_len1 = 0;
+
+		if (s[i] == s[i + 1]){
+			eq_len1 = 1;
+			int j = i - 1;
+			right = i + 1 + i - j;
+			while (j >= 0 && right < slen){
+				if (s[j] != s[right])
+					break;
+				eq_len1++;
+				j--;
+				right = i + 1 + (i - j);
+			}
+
+			if (eq_len1 >= max_len1){
+				max_len1 = eq_len1;
+				mirroridx1 = i;
+			}
+		}
+	}
+
+	printf("%d\n", max_len1);
+
+	/* odd case: similar as bab */
+	for (int i = 0; i < slen - 2; i++){
+		eq_len2 = 0;
+
+		if (s[i] == s[i + 2]){
+			eq_len2 = 1;
+			int j = i - 1;
+			right = i + 2 + i - j;
+			while (j >= 0 && right < slen){
+				if (s[j] != s[right])
+				break;
+
+			eq_len2++;
+			j--;
+			right = i + 2 + i - j;
+			}
+
+			if (eq_len2 >= max_len2){
+				max_len2 = eq_len2;
+				mirroridx2 = i;
+			}
+		}
+	}
+
+	printf("%d\n", max_len2);
+
+	/* even */
+	if (max_len1 > max_len2){
+		int k;
+		char outs[2 * max_len1 + 1];
+		for (k = 0; k < (2 * max_len1); k++)
+			outs[k] = s[mirroridx1 - (max_len1 - k) + 1];
+			outs[k] = '\0'; 
+			s = outs;
+
+		return s;
+	} else { /* odd */
+		int k;
+		char outs[2 * max_len2 + 2];
+		for (k = 0; k < (2 * max_len2 + 1); k++)
+			outs[k] = s[mirroridx2 - (max_len2 - k) + 1];
+			outs[k] = '\0';
+			s = outs;
+
+		return s;
+	}
+}
+
+int strlabel(){
+	char words[MAX_WD_NUM][MAX_WD_LEN];
+	char input[MAX_STR_LEN];
+	char *p;
+	int bitmap[MAX_STR_LEN + 2] = {0};
+	int pos = 0;
+	int wd_num;
+	int len;
+
+	/* input word count */
+	scanf("%d", &wd_num);
+	if (wd_num < 1 || wd_num > MAX_WD_NUM) {
+		printf("Invalid word num: %d\n", wd_num);
+		goto out;
+	}
+
+	/* input words */
+	for (int i = 0; i < wd_num; i++) {
+		scanf("%s", input);
+		len = strlen(input);
+		if (len < 1 || len > MAX_WD_LEN) {
+			printf("Invalid word len:%d\n", len);
+			goto out;
+		}
+		sprintf(words[i], "%s", input);
+	}
+
+	/*input string */
+	scanf("%s", input);
+	len = strlen(input);
+	if (len < 1 || len > MAX_STR_LEN) {
+		printf("Invalid string len:%d\n", len);
+		goto out;
+	}
+
+	/* match word in string */
+	for (int i = 0; i < wd_num; i++) {
+		do {
+			p = strstr(input + pos, words[i]);
+			if (p) {
+				pos = p - input + 1;
+				len = strlen(words[i]);
+				for (int j = pos; j < pos + len; j++)
+					bitmap[j] = 1;
+
+				p = NULL;
+			} else {
+				pos = 0;
+				break;
+			}
+		} while(1);
+	}
+
+	len = strlen(input);
+	for (int i = 0; i < len + 2; i++)
+		printf("%d", bitmap[i]);
+
+	printf("\n");
+
+	/* output string with label */
+	int i = 0;
+	do {
+		if (bitmap[i] == 0 && bitmap[i + 1] == 1)
+			printf("<b>%c", input[i]);
+		else if (bitmap[i] == 1 && bitmap[i + 1] == 0)
+			printf("</b>%c", input[i]);
+		else
+			printf("%c", input[i]);
+		i++;
+	} while(input[i - 1]);
+
+	printf("\n");
+	return 0;
+out:
+	return -1;
+}
+
 struct stack* stack_init() {
 	struct stack* stack = (struct stack*)malloc(sizeof(struct stack));
 	if (!stack)
@@ -197,7 +475,7 @@ int stack_empty(struct stack* stack) {
 	return 0;
 }
 
-void stack_in(struct stack* stack, struct treenode *tnode) {
+void stack_in(struct stack* stack, struct TreeNode *tnode) {
 	struct singlenode* snode =
 			(struct singlenode*)malloc(sizeof(struct singlenode));
 
@@ -216,12 +494,12 @@ void stack_in(struct stack* stack, struct treenode *tnode) {
 	stack->size += 1;
 }
 
-struct treenode* stack_out(struct stack* stack) {
+struct TreeNode* stack_out(struct stack* stack) {
 	if (stack_empty(stack))
 		return NULL;
 
 	struct singlenode* snode = stack->top;
-	struct treenode* tnode = snode->data;
+	struct TreeNode* tnode = snode->data;
 
 	stack->top = snode->next;
 	stack->size -= 1;
@@ -230,7 +508,7 @@ struct treenode* stack_out(struct stack* stack) {
 }
 
 /* DFS: depth first search */
-void dfs(struct treenode* root, int* depth) {
+void dfs(struct TreeNode* root, int* depth) {
 	if (!root)
 		return;
 
@@ -238,7 +516,7 @@ void dfs(struct treenode* root, int* depth) {
 
 	stack_in(stack, root);
 	while (!stack_empty(stack)) {
-		struct treenode* tnode = stack_out(stack);
+		struct TreeNode* tnode = stack_out(stack);
 		(*depth)++;
 		printf("%d\n", tnode->val);
 
@@ -251,7 +529,7 @@ void dfs(struct treenode* root, int* depth) {
 }
 
 /* Preorder traversal binary tree */
-void pretraversal(struct treenode* root, int* depth) {
+void pretraversal(struct TreeNode* root, int* depth) {
 	if (root) {
 		(*depth)++;
 		pretraversal(root->left, depth);
@@ -268,7 +546,7 @@ void pretraversal(struct treenode* root, int* depth) {
 
 /* DFS should be selected */
 
-void search(struct treenode* root, int sum, int*returnsize, int**
+void search(struct TreeNode* root, int sum, int*returnsize, int**
 	    returncolumnsizes, int** result, int* temp, int bufsize) {
 	if (root == NULL);
 		return;
@@ -290,7 +568,7 @@ void search(struct treenode* root, int sum, int*returnsize, int**
 	search(root->right,sum,returnsize,returncolumnsizes,result,temp,bufsize);
 }
 
-int** pathSum(struct treenode* root, int sum, int* returnsize,
+int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	      int** returncolumnsizes) {
 
 	int depth = 0;
@@ -314,7 +592,7 @@ int** pathSum(struct treenode* root, int sum, int* returnsize,
 
 	stack_in(root);
 	while (!stack_empty(root)) {
-		struct treenode* tnode = stack_out(stack);
+		struct TreeNode* tnode = stack_out(stack);
 		temp += tnode->val;
 
 		if (temp == sum)

@@ -1,12 +1,18 @@
-struct treenode {
+#define MAX_WD_NUM	64
+#define MAX_WD_LEN	16
+#define MAX_STR_LEN	512
+
+#define max(a, b)  (a) > (b) ? (a) : (b)
+
+struct TreeNode {
 	int val;
-	struct treenode *left;
-	struct treenode *right;
+	struct TreeNode *left;
+	struct TreeNode *right;
 };
 
 /* single node, for stack operation */
 struct singlenode {
-	struct treenode* data;
+	struct TreeNode* data;
 	struct singlenode* next;
 };
 
@@ -16,7 +22,7 @@ struct stack {
 	int size;
 };
 
-int** pathSum(struct treenode* root, int sum, int* returnsize,
+int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	      int** returncolumnsizes);
 bool canPartitionKSubsets(int* nums, int numssize, int k);
 double* calcEquation(char*** equations, int equationsSize, int* eqationsColSize,
