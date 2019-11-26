@@ -223,6 +223,15 @@ void test_create_tree() {
 	create_tree(root);
 }
 
+void test_pathsum() {
+	struct TreeNode* root;
+	int sum = 0;
+
+	create_tree(root);
+
+	scanf("%d", &sum);
+}
+
 int main() {
 
 	test_create_tree();

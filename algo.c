@@ -178,6 +178,118 @@ bool canPartitionKSubsets(int* nums, int numssize, int k){
 	return check(nums, numssize, temp, target, k, 0, used);
 }
 
+int get_tree_depth(struct TreeNode* root) {
+	if (root == NULL)
+		return 0;
+
+	printf("%d", root->val);
+	int ldepth = get_tree_depth(root->left);
+	int rdepth = get_tree_depth(root->right);
+
+	return ldepth > rdepth ? ldepth + 1 : rdepth + 1;
+	/* FIXME: why bug here */
+//	return max(ldepth, rdepth) + 1;
+}
+
+/* Preorder traversal binary tree */
+void pretraversal(struct TreeNode* root, int* depth) {
+	if (root) {
+		(*depth)++;
+		printf("%d", root->val);
+		pretraversal(root->left, depth);
+		pretraversal(root->right, depth);
+	}
+}
+
+/* In-order traversal */
+void intraversal(struct TreeNode* root, int* depth) {
+	if (root) {
+		(*depth)++;
+		intraversal(root->left, depth);
+		printf("%d", root->val);
+		intraversal(root->right, depth);
+	}
+}
+
+struct stack* stack_init() {
+	struct stack* stack = (struct stack*)malloc(sizeof(struct stack));
+	if (!stack)
+		return NULL;
+
+	stack->bottom = NULL;
+	stack->top = NULL;
+	stack->size = 0;
+
+	return stack;
+}
+
+int stack_empty(struct stack* stack) {
+	if (stack->size == 0)
+		return 1;
+
+	return 0;
+}
+
+void stack_in(struct stack* stack, struct TreeNode *tnode) {
+	struct singlenode* snode =
+			(struct singlenode*)malloc(sizeof(struct singlenode));
+
+	if (!snode)
+		return;
+
+	snode->data = tnode;
+	if (stack_empty(stack)) {
+		snode->next = NULL;
+		stack->bottom = snode;
+		stack->top = snode;
+	} else {
+		snode->next = stack->top;
+		stack->top = snode;
+	}
+	stack->size += 1;
+}
+
+struct TreeNode* stack_out(struct stack* stack) {
+	if (stack_empty(stack))
+		return NULL;
+
+	struct singlenode* snode = stack->top;
+	struct TreeNode* tnode = snode->data;
+
+	stack->top = snode->next;
+	stack->size -= 1;
+
+	return tnode;
+}
+
+/* DFS: depth first search */
+void dfs(struct TreeNode* root, int* depth) {
+	int left_depth = 0;
+	int right_depth = 0;
+	if (!root)
+		return;
+
+	struct stack* stack = stack_init();
+
+	stack_in(stack, root);
+	while (!stack_empty(stack)) {
+		struct TreeNode* tnode = stack_out(stack);
+		printf("%d", tnode->val);
+
+		if (tnode->right) {
+			right_depth++;
+			stack_in(stack, tnode->right);
+		}
+
+		if (tnode->left) {
+			left_depth++;
+			stack_in(stack, tnode->left);
+		}
+	}
+
+	*depth = max(left_depth, right_depth) + 1;
+}
+
 struct TreeNode* __create_tree(int* data, int index, int n) {
 	struct TreeNode* node = NULL;
 
@@ -193,8 +305,6 @@ struct TreeNode* __create_tree(int* data, int index, int n) {
 	return node;
 }
 
-void pretraversal(struct TreeNode* root, int* depth);
-void dfs(struct TreeNode* root, int* depth);
 struct TreeNode* create_tree(struct TreeNode* root) {
 	int input[TREE_NODE_MAX_NUM];
 	int count;
@@ -215,8 +325,11 @@ struct TreeNode* create_tree(struct TreeNode* root) {
 
 //		printf("%d", input[i]);
 	root = __create_tree(input, 0, count);
+	printf("count:%d\n", count);
 //	dfs(root, &depth);
-	pretraversal(root, &depth);
+//	pretraversal(root, &depth);
+//	intraversal(root, &depth);
+	printf("\ndepth:%d\n", get_tree_depth(root));
 }
 
 void traverse_bitree(struct TreeNode* root, int *node_num){
@@ -497,87 +610,7 @@ out:
 	return -1;
 }
 
-struct stack* stack_init() {
-	struct stack* stack = (struct stack*)malloc(sizeof(struct stack));
-	if (!stack)
-		return NULL;
 
-	stack->bottom = NULL;
-	stack->top = NULL;
-	stack->size = 0;
-
-	return stack;
-}
-
-int stack_empty(struct stack* stack) {
-	if (stack->size == 0)
-		return 1;
-
-	return 0;
-}
-
-void stack_in(struct stack* stack, struct TreeNode *tnode) {
-	struct singlenode* snode =
-			(struct singlenode*)malloc(sizeof(struct singlenode));
-
-	if (!snode)
-		return;
-
-	snode->data = tnode;
-	if (stack_empty(stack)) {
-		snode->next = NULL;
-		stack->bottom = snode;
-		stack->top = snode;
-	} else {
-		snode->next = stack->top;
-		stack->top = snode;
-	}
-	stack->size += 1;
-}
-
-struct TreeNode* stack_out(struct stack* stack) {
-	if (stack_empty(stack))
-		return NULL;
-
-	struct singlenode* snode = stack->top;
-	struct TreeNode* tnode = snode->data;
-
-	stack->top = snode->next;
-	stack->size -= 1;
-
-	return tnode;
-}
-
-/* DFS: depth first search */
-void dfs(struct TreeNode* root, int* depth) {
-	if (!root)
-		return;
-
-	struct stack* stack = stack_init();
-
-	stack_in(stack, root);
-	while (!stack_empty(stack)) {
-		struct TreeNode* tnode = stack_out(stack);
-		(*depth)++;
-		printf("%d\n", tnode->val);
-
-		if (!tnode->right)
-			stack_in(stack, tnode->right);
-
-		if (!tnode->left)
-			stack_in(stack, tnode->left);
-	}
-}
-
-/* Preorder traversal binary tree */
-void pretraversal(struct TreeNode* root, int* depth) {
-	if (root) {
-		(*depth)++;
-		printf("%d", root->val);
-		pretraversal(root->left, depth);
-		pretraversal(root->right, depth);
-	}
-}
 
 /**
  * Return an array of arrays of size *returnsize.
@@ -653,3 +686,45 @@ int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	return result;
 }
 
+#if 0
+int** pathSum(struct TreeNode* root, int sum, int* returnsize,
+	      int** returncolumnsizes) {
+
+	int depth = 0;
+	int pathnum = 0;
+
+	pretraversal(root, &depth);
+
+	pathnum = 2^(depth - 1);
+
+	int** result = (int**)malloc(pathnum * depth * sizeof(int*));
+	(*returncolumnsizes) = (int*)malloc(pathnum * sizeof(int));
+	*returnsize = 0;
+
+	if (!root)
+		return result;
+
+	struct stack* stack = stack_init();
+
+	stack_in(root);
+	int* temp_array = (int*)malloc(depth * sizeof(int));
+	while (!stack_empty(root)) {
+		struct TreeNode* tnode = stack_out(stack);
+		temp_array[i] = tnode->val;
+		temp_sum += tnode->val;
+
+		if (temp == sum)
+			continue;
+
+		if (tnode->left)
+			stack_in(stack, tnode->left);
+
+		if (tnode->right)
+			stack_in(stack, tnode->right);
+	}
+
+	int* temp = (int*)malloc(depth * sizeof(int));
+	search(root, sum, returnsize, returncolumnsizes, result, temp, 0);
+	return result;
+}
+#endif
