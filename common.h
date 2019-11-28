@@ -25,6 +25,17 @@ struct stack {
 	int size;
 };
 
+struct queue {
+	struct singlenode* head;
+	struct singlenode* tail;
+	int size;
+};
+
+void pretraversal(struct TreeNode* root, int* depth);
+void intraversal(struct TreeNode* root, int* depth);
+void posttraversal(struct TreeNode* root, int* depth);
+void bfs(struct TreeNode* root, int* depth);
+void dfs(struct TreeNode* root, int* depth);
 struct TreeNode* create_tree(struct TreeNode* root);
 int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	      int** returncolumnsizes);

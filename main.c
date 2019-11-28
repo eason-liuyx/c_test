@@ -226,15 +226,38 @@ void test_create_tree() {
 void test_pathsum() {
 	struct TreeNode* root;
 	int sum = 0;
+	int depth = 0;
+	int returnsize = 0;
+	int* retclnsize;
+	int** retarray;
 
-	create_tree(root);
+	root = create_tree(root);
+
+	printf("pre:");
+	pretraversal(root, &depth); printf(" depth: %d", depth);
+	printf("\nin:");
+	intraversal(root, &depth); printf(" depth: %d", depth);
+	printf("\npost:");
+	posttraversal(root, &depth); printf(" depth: %d", depth);
+	printf("\ndfs:");
+	dfs(root, &depth); printf(" depth: %d", depth);
+	printf("\nbfs:");
+	bfs(root, &depth); printf(" depth: %d", depth);
+	printf("\n");
 
 	scanf("%d", &sum);
+
+	retarray = pathSum(root, sum, &returnsize, &retclnsize);
+
+	for (int i = 0; i < returnsize; i++)
+		for (int j = 0; j < retclnsize[i]; j++)
+			printf("%d", retarray[i][j]);
 }
 
 int main() {
 
-	test_create_tree();
+//	test_create_tree();
+	test_pathsum();
 
 	return 0;
 }

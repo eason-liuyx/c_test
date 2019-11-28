@@ -182,7 +182,7 @@ int get_tree_depth(struct TreeNode* root) {
 	if (root == NULL)
 		return 0;
 
-	printf("%d", root->val);
+	//printf("%d", root->val);
 	int ldepth = get_tree_depth(root->left);
 	int rdepth = get_tree_depth(root->right);
 
@@ -208,6 +208,14 @@ void intraversal(struct TreeNode* root, int* depth) {
 		intraversal(root->left, depth);
 		printf("%d", root->val);
 		intraversal(root->right, depth);
+	}
+}
+
+void posttraversal(struct TreeNode* root, int* depth) {
+	if (root) {
+		posttraversal(root->left, depth);
+		posttraversal(root->right, depth);
+		printf("%d", root->val);
 	}
 }
 
@@ -262,6 +270,90 @@ struct TreeNode* stack_out(struct stack* stack) {
 	return tnode;
 }
 
+struct queue* queue_init() {
+	struct queue* queue = (struct queue*)malloc(sizeof(struct queue));
+	if (queue == NULL)
+		return NULL;
+
+	queue->head = NULL;
+	queue->tail = NULL;
+	queue->size = 0;
+
+	return queue;
+}
+
+int queue_empty(struct queue* queue) {
+	if (queue->size == 0)
+		return 1;
+
+	return 0;
+}
+
+void queue_in(struct queue* queue, struct TreeNode* root) {
+	struct singlenode* node =
+			 (struct singlenode*)malloc(sizeof(struct singlenode));
+	if (node == NULL)
+		return;
+
+	node->data = root;
+	node->next = NULL;
+	if (queue_empty(queue))
+		queue->head = node;
+	else
+		queue->tail->next = node;
+
+	queue->tail = node;
+	queue->size += 1;
+}
+
+struct TreeNode* queue_out(struct queue* queue) {
+	if (queue_empty(queue))
+		return NULL;
+
+	struct singlenode* node = queue->head;
+	queue->head = node->next;
+	queue->size -= 1;
+	struct TreeNode* tnode = node->data;
+
+	return tnode;
+}
+
+struct TreeNode* queue_pop(struct queue* queue) {
+	if (queue_empty(queue))
+		return NULL;
+
+	struct TreeNode* tnode = queue->tail->data;
+
+	return tnode;
+}
+
+/* BFS: breadth first search */
+void bfs(struct TreeNode* root, int* depth) {
+	*depth = 0;
+	if (root == NULL)
+		return;
+
+	int left_depth = 0;
+	int right_depth = 0;
+	struct TreeNode* tnode;
+	struct queue* queue = queue_init();
+
+	queue_in(queue, root);
+	while (!queue_empty(queue)) {
+		tnode = queue_out(queue);
+		printf("%d", tnode->val);
+		if (tnode->left) {
+			left_depth++;
+			queue_in(queue, tnode->left);
+		}
+		if (tnode->right) {
+			right_depth++;
+			queue_in(queue, tnode->right);
+		}
+	}
+	*depth = max(left_depth, right_depth) + 1;
+}
+
 /* DFS: depth first search */
 void dfs(struct TreeNode* root, int* depth) {
 	int left_depth = 0;
@@ -269,11 +361,12 @@ void dfs(struct TreeNode* root, int* depth) {
 	if (!root)
 		return;
 
+	struct TreeNode* tnode;
 	struct stack* stack = stack_init();
 
 	stack_in(stack, root);
 	while (!stack_empty(stack)) {
-		struct TreeNode* tnode = stack_out(stack);
+		tnode = stack_out(stack);
 		printf("%d", tnode->val);
 
 		if (tnode->right) {
@@ -286,19 +379,20 @@ void dfs(struct TreeNode* root, int* depth) {
 			stack_in(stack, tnode->left);
 		}
 	}
-
 	*depth = max(left_depth, right_depth) + 1;
 }
 
 struct TreeNode* __create_tree(int* data, int index, int n) {
 	struct TreeNode* node = NULL;
 
+	/* -1 means NULL */
 	if (index < n && data[index] != -1) {
 		node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
 		if (node == NULL)
 			return NULL;
 
 		node->val = data[index];
+		/* index determined by layer order */
 		node->left = __create_tree(data, 2 * index + 1, n);
 		node->right = __create_tree(data, 2 * index + 2, n);
 	}
@@ -326,10 +420,8 @@ struct TreeNode* create_tree(struct TreeNode* root) {
 //		printf("%d", input[i]);
 	root = __create_tree(input, 0, count);
 	printf("count:%d\n", count);
-//	dfs(root, &depth);
-//	pretraversal(root, &depth);
-//	intraversal(root, &depth);
 	printf("\ndepth:%d\n", get_tree_depth(root));
+	return root;
 }
 
 void traverse_bitree(struct TreeNode* root, int *node_num){
@@ -623,7 +715,7 @@ out:
 
 void search(struct TreeNode* root, int sum, int*returnsize, int**
 	    returncolumnsizes, int** result, int* temp, int bufsize) {
-	if (root == NULL);
+	if (root == NULL)
 		return;
 
 	if (root->left == NULL && root->right == NULL && sum == root->val) {
@@ -643,48 +735,24 @@ void search(struct TreeNode* root, int sum, int*returnsize, int**
 	search(root->right,sum,returnsize,returncolumnsizes,result,temp,bufsize);
 }
 
+#if 1
 int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	      int** returncolumnsizes) {
 
 	int depth = 0;
 	int pathnum = 0;
-
-//	pretraversal(root, &depth);
-
-//	pathnum = 2^(depth - 1);
-
-//	int** result = (int**)malloc(pathnum * depth * sizeof(int*));
-//	(*returncolumnsizes) = (int*)malloc(pathnum * sizeof(int));
-//	*returnsize = 0;
-
 	int** result = (int**)malloc(sizeof(int*) * 1024);
 	(*returncolumnsizes) = (int*)malloc(sizeof(int) * 1024);
 	*returnsize = 0;
+
 	if (!root)
 		return result;
-/*
-	struct stack* stack = stack_init();
 
-	stack_in(root);
-	while (!stack_empty(root)) {
-		struct TreeNode* tnode = stack_out(stack);
-		temp += tnode->val;
-
-		if (temp == sum)
-			continue;
-
-		if (!tnode->right)
-			stack_in(stack, tnode->right);
-
-		if (!tnode->left)
-			stack_in(stack, tnode->left);
-	}
-*/
-
-	int* temp = (int*)malloc(depth * sizeof(int));
+	int* temp = (int*)malloc(1024 * sizeof(int));
 	search(root, sum, returnsize, returncolumnsizes, result, temp, 0);
 	return result;
 }
+#endif
 
 #if 0
 int** pathSum(struct TreeNode* root, int sum, int* returnsize,
@@ -692,9 +760,10 @@ int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 
 	int depth = 0;
 	int pathnum = 0;
+	int i = 0;
+	int temp_sum = 0;
 
 	pretraversal(root, &depth);
-
 	pathnum = 2^(depth - 1);
 
 	int** result = (int**)malloc(pathnum * depth * sizeof(int*));
@@ -706,15 +775,17 @@ int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 
 	struct stack* stack = stack_init();
 
-	stack_in(root);
+	stack_in(stack, root);
 	int* temp_array = (int*)malloc(depth * sizeof(int));
-	while (!stack_empty(root)) {
+	while (!stack_empty(stack)) {
 		struct TreeNode* tnode = stack_out(stack);
 		temp_array[i] = tnode->val;
 		temp_sum += tnode->val;
-
-		if (temp == sum)
+		if (temp_sum == sum) {
+			stack_in(stack, root);
+			i = 0;
 			continue;
+		}
 
 		if (tnode->left)
 			stack_in(stack, tnode->left);
