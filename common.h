@@ -31,6 +31,7 @@ struct queue {
 	int size;
 };
 
+void quick_sort(int* arr, int left, int right);
 void pretraversal(struct TreeNode* root, int* depth);
 void intraversal(struct TreeNode* root, int* depth);
 void posttraversal(struct TreeNode* root, int* depth);

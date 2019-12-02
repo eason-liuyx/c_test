@@ -153,6 +153,32 @@ static bool check(int* nums, int numssize, int temp, int target, int k, int idx,
 	return false;
 }
 
+void quick_sort(int* arr, int left, int right) {
+	if (left >= right)
+		return;
+
+	int i = left;
+	int j = right;
+	int key = arr[left];
+	while (i < j) {
+		while (i < j && key <= arr[j]) {
+			j--;
+		}
+
+		arr[i] = arr[j];
+
+		while (i < j && key >= arr[i]) {
+			i++;
+		}
+
+		arr[j] = arr[i];
+	}
+
+	arr[i] = key;
+	quick_sort(arr, left, i - 1);
+	quick_sort(arr, i + 1, right);
+}
+
 bool canPartitionKSubsets(int* nums, int numssize, int k){
 	int sum = 0;
 	int maxval = 0;
