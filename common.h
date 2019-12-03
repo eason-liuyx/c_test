@@ -2,6 +2,8 @@
 #define MAX_WD_LEN	16
 #define MAX_STR_LEN	512
 
+#define UP_ALPHABET_LEN 26
+
 #define TREE_NODE_MAX_NUM 1024
 #define TREE_NODE_MAX_VALUE 0xF
 
@@ -31,6 +33,7 @@ struct queue {
 	int size;
 };
 
+int leastInterval(char* tasks, int tasksSize, int n);
 void quick_sort(int* arr, int left, int right);
 void pretraversal(struct TreeNode* root, int* depth);
 void intraversal(struct TreeNode* root, int* depth);

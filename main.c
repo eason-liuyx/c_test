@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "common.h"
 
@@ -254,10 +255,18 @@ void test_pathsum() {
 			printf("%d", retarray[i][j]);
 }
 
+void test_leastinterval() {
+	//char* tasks = "AAAABBDDDDDFFDDAA";
+	char* tasks = "AAABBB";
+	int tasksize = strlen(tasks);
+	int duration = leastInterval(tasks, tasksize, 2);
+	printf("need time:%d\n", duration);
+}
+
 int main() {
 
 //	test_create_tree();
-	test_pathsum();
+	test_leastinterval();
 
 	return 0;
 }

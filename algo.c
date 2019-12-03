@@ -825,3 +825,32 @@ int** pathSum(struct TreeNode* root, int sum, int* returnsize,
 	return result;
 }
 #endif
+
+int leastInterval(char* tasks, int tasksSize, int n) {
+
+	int a[UP_ALPHABET_LEN] = {0};
+
+	/* hash tasks into an array of statistical */
+	for (int i = 0; i < tasksSize; i++)
+		a[tasks[i] - 'A']++;
+
+	quick_sort(a, 0, UP_ALPHABET_LEN - 1);
+
+	int time = 0;
+	while (a[UP_ALPHABET_LEN - 1] > 0) {
+		int i = 0;
+		while (i <= n) {
+			if (a[UP_ALPHABET_LEN - 1] == 0)
+				break;
+
+			if (i < UP_ALPHABET_LEN &&
+			    a[UP_ALPHABET_LEN - 1 - i] > 0)
+				a[UP_ALPHABET_LEN - 1 - i]--;
+
+			time++;
+			i++;
+		}
+		quick_sort(a, 0, UP_ALPHABET_LEN - 1);
+	}
+	return time;
+}
