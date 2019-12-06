@@ -33,6 +33,7 @@ struct queue {
 	int size;
 };
 
+char* pushDominoes(char* dominoes);
 int leastInterval(char* tasks, int tasksSize, int n);
 void quick_sort(int* arr, int left, int right);
 void pretraversal(struct TreeNode* root, int* depth);

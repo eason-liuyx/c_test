@@ -263,10 +263,19 @@ void test_leastinterval() {
 	printf("need time:%d\n", duration);
 }
 
+void test_dominoes() {
+	char dominoes[] = ".L.R...LR..L..";
+	int len = strlen(dominoes);
+	char * ret;
+	ret = pushDominoes(dominoes);
+	for (int i = 0; i < len; i++)
+		printf("%c", ret[i]);
+}
+
 int main() {
 
 //	test_create_tree();
-	test_leastinterval();
+	test_dominoes();
 
 	return 0;
 }

@@ -854,3 +854,39 @@ int leastInterval(char* tasks, int tasksSize, int n) {
 	}
 	return time;
 }
+
+char* pushDominoes(char* dominoes) {
+	bool flag = false; /* is R waiting for matching */
+	int start = 0; /* position of last R */
+	int domi_size = strlen(dominoes);
+
+	for (int i = 0; i < domi_size; i++) {
+		if (dominoes[i] == 'L') {
+			if (flag == false)
+				for (int r = i - 1;
+				     r >= 0 && dominoes[r] == '.'; r--)
+					dominoes[r] = 'L';
+			else {
+				for (int l = start + 1, r = i - 1;
+				     l < i && l < r; l++, r--) {
+					dominoes[l] = 'R';
+					dominoes[r] = 'L';
+				}
+				flag = false;
+			}
+		} else if (dominoes[i] == 'R') {
+			if (flag)
+				for (int l = start + 1; l < i; l++)
+					dominoes[l] = 'R';
+
+			flag = true;
+			start = i;
+		}
+	}
+
+	if (flag)
+		for (int l = start + 1; l < domi_size; l++)
+			dominoes[l] = 'R';
+
+	return dominoes;
+}
