@@ -890,3 +890,126 @@ char* pushDominoes(char* dominoes) {
 
 	return dominoes;
 }
+
+/* how to buy one ticket with least cost */
+int mincostOneTickets(int* days, int daysSize, int* costs, int costsSize) {
+	if (daysSize == 0)
+		return 0;
+
+	if (daysSize == 1)
+		return costs[0];
+
+	int flag = false; /* whether large then 7 days */
+	int cost = 0;
+	int tmp = 0;
+	int day_start = days[0];
+	int duration = 0;
+	int days_num = 0; /* record the total days for one ticket */
+	int daynum_7 = 0;
+	int daynum_30 = 0;
+	float avg_day30 = 0;
+	float avg_day7 = 0;
+	for (int i = 0; i < daysSize; i++) {
+		duration = days[i] - day_start;
+		if (duration > 30) {
+			break;
+		}
+
+		if (duration >= 7) {
+			daynum_30++;
+			continue;
+		}
+
+		daynum_30++;
+		daynum_7++;
+	}
+
+	avg_day30 = (float)costs[2] / daynum_30;
+	avg_day7 = (float)costs[1] / daynum_7;
+	if (costs[0] <= avg_day7) {
+		days_num = 1;
+		cost = costs[0];
+	} else if (avg_day7 < avg_day30) {
+		days_num = daynum_7;
+		cost = costs[1];
+	} else { 
+		days_num = daynum_30;
+		cost = costs[2];
+	}
+out:
+	daysSize = daysSize - days_num;
+	days = &days[days_num];
+	return cost + mincostOneTickets(days, daysSize, costs, costsSize);
+}
+
+int mincostTickets(int* days, int daysSize, int* costs, int costsSize) {
+	int day_cost[366]; /*day_cost[i][0] buy for 7-day */
+	int dayidx = 0;
+	int ticketday = costs[0];
+	int ticketweek = costs[1];
+	int ticketmonth = costs[2];
+
+	day_cost[0] = 0;
+
+	for (int today = 1; today <= 365; today++) {
+		if (dayidx >= daysSize) {
+			break;
+		}
+
+		if (days[dayidx] != today) {
+			day_cost[today] = day_cost[today - 1];
+			continue;
+		}
+		dayidx++;
+		day_cost[today] = min(day_cost[max(0, today - 1)] + ticketday,
+				      day_cost[max(0, today - 7)] + ticketweek);
+		day_cost[today] = min(day_cost[today],
+				      day_cost[max(0, today - 30)] + ticketmonth);
+	}
+	return day_cost[days[daysSize - 1]];
+
+#if 0
+	/* calc price per day with different cost */
+	float p1 = costs[0];
+	float p2 = costs[1] / 7;
+	float p3 = (float)costs[2] / 30;
+
+	float days_thrd12 = p1 / p2;
+	float days_thrd13 = p1 / p3;
+	float days_thrd23 = p2 / p3;
+
+	if (p1 < p2 && p1 < p3)
+		return p1 * daysSize;
+
+	int in_day7 = 0; /* the interval of two days below 7 */
+	int in_day30 = 0;
+	int end_day7 = 0; /* which day this ticket ends */ 
+	int end_day30 = 0; /* which day this ticket ends */
+	int cost7 = 0; /* one ticket per day */
+	int cost30 = 0;
+	int dp[daysSize]; /* record cost per day */
+
+	for (int i = 0; i < daysSize; i++) {
+		for (int j = i; j < i + 7; j++)
+			if (day[j] - day[i] < 7) {
+				end_day7 = j;
+				in_day7++;
+			}
+		cost7 = in_day7 * costs[0];
+
+		for (int j = i; j < i + 30; j++)
+			if (day[j] - day[i] < 30) {
+				end_day30 = j;
+				in_day30++;
+			}
+		cost30 = in_day30 * costs[0];
+
+		if (in_day7 * costs[0] > costs[1]) {
+
+
+		dp[i] = min(dp[i + 1] +  costs[0], dp[i + 7] + costs[1],
+			    dp[i + 30] + costs[2]);
+
+	return mincostOneTickets(days, daysSize, costs, costsSize);
+#endif
+}

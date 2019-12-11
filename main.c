@@ -272,10 +272,26 @@ void test_dominoes() {
 		printf("%c", ret[i]);
 }
 
+void test_mincostTickets()
+{
+	int days[] = {1, 4, 6, 7, 8, 20};
+//	int days[] = {1,2,3,4,5,6,7,8,9,10,30,31};
+//	int days[] = {1,4,6,9,10,11,12,13,14,15,16,17,18,20,21,22,23,27,28};
+	int dsize = sizeof(days) / sizeof(days[0]);
+	int costs[] = {2, 7, 15};
+//	int costs[] = {3, 13, 45};
+	int costsSize = 3;
+	int totalcost = 0;
+
+	totalcost = mincostTickets(days, dsize, costs, costsSize);
+	printf("%d\n", totalcost);
+}
+
+
 int main() {
 
 //	test_create_tree();
-	test_dominoes();
+	test_mincostTickets();
 
 	return 0;
 }

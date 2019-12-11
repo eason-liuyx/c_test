@@ -8,6 +8,7 @@
 #define TREE_NODE_MAX_VALUE 0xF
 
 #define max(a, b)  (a) > (b) ? (a) : (b)
+#define min(a, b)  (a) < (b) ? (a) : (b)
 
 struct TreeNode {
 	int val;
@@ -33,6 +34,7 @@ struct queue {
 	int size;
 };
 
+int mincostTickets(int* days, int daysSize, int* costs, int costsSize);
 char* pushDominoes(char* dominoes);
 int leastInterval(char* tasks, int tasksSize, int n);
 void quick_sort(int* arr, int left, int right);
