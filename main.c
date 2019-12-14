@@ -287,11 +287,28 @@ void test_mincostTickets()
 	printf("%d\n", totalcost);
 }
 
+void test_kclosest()
+{
+	int* points[2];
+	int a[2] = {1, 3};
+	int b[2] = {-2, 2};
+	points[0] = a;
+	points[1] = b;
+	int pointsSize = 2;
+	int pointColSize = 2;
+	int retsz;
+	int* retcolsize = 0;
+	int** retarray;
+	retarray = kClosest(points, pointsSize, &pointColSize, 1, &retsz, &retcolsize);
+	printf("%d", retarray[0][0]);
+	printf("%d", retarray[0][1]);
+
+}
+
 
 int main() {
 
-//	test_create_tree();
-	test_mincostTickets();
+	test_kclosest();
 
 	return 0;
 }

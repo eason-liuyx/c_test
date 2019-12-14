@@ -1013,3 +1013,44 @@ int mincostTickets(int* days, int daysSize, int* costs, int costsSize) {
 	return mincostOneTickets(days, daysSize, costs, costsSize);
 #endif
 }
+
+static int dist_calc(int* points) {
+	return points[0] * points[0] + points[1] * points[1];
+}
+
+int** kClosest(int** points, int pointsSize, int* pointColSize, int K,
+	       int* returnSize, int** returnColumnSizes) {
+	if (K == 1 && pointsSize == 1) {
+		int **array = (int**)malloc(sizeof(int*));
+		int *retcolsz = (int*)malloc(sizeof(int));
+		array[0] = (int*)malloc(sizeof(int) * (*pointColSize));
+		array[0] = points[0];
+		*returnColumnSizes = pointColSize;
+		*returnSize = 1;
+		return array;
+	}
+
+	int dist[pointsSize];
+
+	for (int i = 0; i < pointsSize; i++)
+		dist[i] = dist_calc(points[i]);
+
+	quick_sort(dist, 0, pointsSize - 1);
+	int Kth_dist = dist[K - 1];
+
+	int** array = (int**)malloc(sizeof(int*) * K);
+	int* retcolsz = (int*)malloc(sizeof(int) * K);
+
+	*returnSize = 0;
+	for (int i = 0; i < pointsSize; i++)
+		if (dist_calc(points[i]) <= Kth_dist) {
+			array[*returnSize] = malloc(sizeof(int) * 2);
+			array[*returnSize] = points[i];
+			retcolsz[*returnSize] = *pointColSize;
+			(*returnSize)++;
+		}
+
+	*returnColumnSizes = retcolsz;
+
+	return array;
+}
