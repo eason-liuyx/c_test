@@ -1014,8 +1014,16 @@ int mincostTickets(int* days, int daysSize, int* costs, int costsSize) {
 #endif
 }
 
-static int dist_calc(int* points) {
-	return points[0] * points[0] + points[1] * points[1];
+static int dist_calc(int* point) {
+	return point[0] * point[0] + point[1] * point[1];
+}
+
+static void swap(int* point1, int* point2) {
+	int tmp1 = point1[0], tmp2 = point1[1];
+	point1[0] = point2[0];
+	point1[1] = point2[1];
+	point2[0] = tmp1;
+	point2[1] = tmp2;
 }
 
 int** kClosest(int** points, int pointsSize, int* pointColSize, int K,
@@ -1049,6 +1057,60 @@ int** kClosest(int** points, int pointsSize, int* pointColSize, int K,
 			retcolsz[*returnSize] = *pointColSize;
 			(*returnSize)++;
 		}
+
+	*returnColumnSizes = retcolsz;
+
+	return array;
+}
+
+/* size: the size of first part of the region after divided */
+void region_divide(int** points, int left, int right, int K) {
+	if (left >= right)
+		return;
+
+	int i = left;
+	int j = right;
+	int key = dist_calc(points[left]);
+
+	while (i < j) {
+		while (i < j && key < dist_calc(points[j])) j--;
+		while (i < j && key > dist_calc(points[i])) i++;
+		if (key== dist_calc(points[j]) && key == dist_calc(points[i]))
+			break;
+		swap(points[i], points[j]);
+	}
+
+	if (K <= i - left + 1)
+		region_divide(points, left, i, K);
+	else
+		region_divide(points, i + 1, right, K - (i - left + 1));
+}
+
+/* use divide and conqer */
+int** kClosest_DC(int** points, int pointsSize, int* pointColSize, int K,
+		  int* returnSize, int** returnColumnSizes) {
+	if (K == 1 && pointsSize == 1) {
+		int **array = (int**)malloc(sizeof(int*));
+		int *retcolsz = (int*)malloc(sizeof(int));
+		array[0] = (int*)malloc(sizeof(int) * (*pointColSize));
+		array[0] = points[0];
+		*returnColumnSizes = pointColSize;
+		*returnSize = 1;
+		return array;
+	}
+
+	region_divide(points, 0, pointsSize - 1, K);
+
+	int** array = (int**)malloc(sizeof(int*) * K);
+	int* retcolsz = (int*)malloc(sizeof(int) * K);
+
+	*returnSize = 0;
+	for (int i = 0; i < K; i++) {
+		array[*returnSize] = malloc(sizeof(int) * 2);
+		array[*returnSize] = points[i];
+		retcolsz[*returnSize] = *pointColSize;
+		(*returnSize)++;
+	}
 
 	*returnColumnSizes = retcolsz;
 

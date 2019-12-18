@@ -289,19 +289,20 @@ void test_mincostTickets()
 
 void test_kclosest()
 {
-	int* points[2];
-	int a[2] = {1, 3};
-	int b[2] = {-2, 2};
-	points[0] = a;
-	points[1] = b;
-	int pointsSize = 2;
+	int a[2] = {6, 10};
+	int b[2] = {-3, 3};
+	int c[2] = {-2, 5};
+	int d[2] = {0, 2};
+	int *points[4] = {a, b, c, d};
+	int pointsSize = 4;
 	int pointColSize = 2;
+	int K = 3;
 	int retsz;
 	int* retcolsize = 0;
 	int** retarray;
-	retarray = kClosest(points, pointsSize, &pointColSize, 1, &retsz, &retcolsize);
-	printf("%d", retarray[0][0]);
-	printf("%d", retarray[0][1]);
+	retarray = kClosest_DC(points, pointsSize, &pointColSize, K, &retsz, &retcolsize);
+	for (int i = 0; i < K; i++)
+		printf("{%d, %d}\n", retarray[i][0], retarray[i][1]);
 
 }
 
