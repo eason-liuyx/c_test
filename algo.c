@@ -1116,3 +1116,35 @@ int** kClosest_DC(int** points, int pointsSize, int* pointColSize, int K,
 
 	return array;
 }
+
+int findAllgenes(int len, char* GeneSeq) {
+	if (len <= 2)
+		return 0;
+
+	int winlen;
+	int start; /* subgene start index */
+	int count = 0;
+	int pos;
+
+	for (int i = 1; i < len - 1; i++) {
+		printf("i = %d   ", i);
+		winlen = len - i;
+		for (int j = 0; j <= i; j++) {
+			char* p = NULL;
+			char tmp[winlen + 1]; /* subgene */
+			start = j;
+			strncpy(tmp, GeneSeq + start, winlen);
+			tmp[winlen] = '\0';
+			p = strstr(GeneSeq, tmp);
+			pos = p - GeneSeq;
+			if (pos == start) {
+				printf("%s", tmp);
+				count++;
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+
+	return count;
+}

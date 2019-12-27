@@ -306,10 +306,23 @@ void test_kclosest()
 
 }
 
+void test_findallgene()
+{
+//     char Geneseq[] = "AGCCT";
+//       char Geneseq[] = "AGAGAGAG";
+//     char Geneseq[] = "AGCTAGCTAGCT";
+       char Geneseq[] = "AGCTACGCT";
+
+       int len = 9;
+       int ret;
+
+       ret = findAllgenes(len, Geneseq);
+       printf("total subgene num: %d\n", ret);
+}
 
 int main() {
 
-	test_kclosest();
+	test_findallgene();
 
 	return 0;
 }
