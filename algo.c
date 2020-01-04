@@ -1148,3 +1148,24 @@ int findAllgenes(int len, char* GeneSeq) {
 
 	return count;
 }
+
+/* remove val from array nums[] */
+int removeElement(int* nums, int numSize, int val) {
+	int retsz = numSize;
+
+	for(int i = 0; i < retsz; i++) {
+		if (nums[i] == val) {
+			for(int j = retsz - 1; j >= i; j--) {
+				retsz -= 1;
+				if (nums[j] == val)
+					continue;
+				else {
+					nums[i] = nums[j];
+					break;
+				}
+			}
+		}
+	}
+
+	return retsz;
+}

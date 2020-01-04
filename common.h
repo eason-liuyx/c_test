@@ -34,6 +34,7 @@ struct queue {
 	int size;
 };
 
+int removeElement(int* nums, int numSize, int val);
 int findAllgenes(int len, char* GeneSeq);
 int** kClosest(int** points, int pointsSize, int* pointColSize, int K,
 	       int* returnSize, int** returnColumnSizes);

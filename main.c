@@ -320,9 +320,21 @@ void test_findallgene()
        printf("total subgene num: %d\n", ret);
 }
 
+void test_removeelement()
+{
+//	int nums[] = {3, 2, 2, 3};
+	int nums[] = {0, 1, 2, 2, 3, 0, 4, 2};
+	int numSize = sizeof(nums) / sizeof(nums[0]);
+	int val = 2;
+	int ret;
+
+	ret = removeElement(nums, numSize, val);
+	printf("Array length after delete elements: %d\n", ret);
+}
+
 int main() {
 
-	test_findallgene();
+	test_removeelement();
 
 	return 0;
 }
