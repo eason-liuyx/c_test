@@ -332,9 +332,21 @@ void test_removeelement()
 	printf("Array length after delete elements: %d\n", ret);
 }
 
+void test_nextPermutation()
+{
+	int nums[] = {1, 2, 3};
+	int numsSize = sizeof(nums) / sizeof(nums[0]);
+
+	nextPermutation(nums, numsSize);
+	for (int i = 0; i < numsSize; i++)
+		printf("%d", nums[i]);
+
+	printf("\n");
+}
+
 int main() {
 
-	test_removeelement();
+	test_nextPermutation();
 
 	return 0;
 }

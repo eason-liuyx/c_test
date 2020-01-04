@@ -179,6 +179,32 @@ void quick_sort(int* arr, int left, int right) {
 	quick_sort(arr, i + 1, right);
 }
 
+void quick_sort_descend(int* arr, int left, int right) {
+	if (left >= right)
+		return;
+
+	int i = left;
+	int j = right;
+	int key = arr[right];
+	while (i < j) {
+		while (i < j && key <= arr[i]) {
+			i++;
+		}
+
+		arr[j] = arr[i];
+
+		while (i < j && key >= arr[j]) {
+			j--;
+		}
+
+		arr[i] = arr[j];
+	}
+
+	arr[j] = key;
+	quick_sort_descend(arr, left, j - 1);
+	quick_sort_descend(arr, j + 1, right);
+}
+
 bool canPartitionKSubsets(int* nums, int numssize, int k){
 	int sum = 0;
 	int maxval = 0;
@@ -1168,4 +1194,17 @@ int removeElement(int* nums, int numSize, int val) {
 	}
 
 	return retsz;
+}
+
+void nextPermutation(int* nums, int numsSize) {
+	int has_next = 0;
+	for(int j = numsSize - 1; j > 0; j--)
+		if (nums[j] > nums[j - 1]) {
+			has_next = 1;
+			quick_sort_descend(&nums[j - 1], 0, numsSize - j);
+			break;
+		}
+
+	if (!has_next)
+		quick_sort_descend(nums, 0, numsSize - 1);
 }
