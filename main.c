@@ -344,6 +344,15 @@ void test_nextPermutation()
 	printf("\n");
 }
 
+void test_rotateMatrix() {
+	int matrix[][3] = {2, 3, 4, 1, 4, 2, 3, 1, 2};
+	int msize = 3;
+	int *mp[msize];
+	for (int i = 0; i < msize; i++) {
+		mp[i] = matrix[i];
+	}
+}
+
 int main() {
 
 	test_nextPermutation();

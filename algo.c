@@ -1208,3 +1208,10 @@ void nextPermutation(int* nums, int numsSize) {
 	if (!has_next)
 		quick_sort_descend(nums, 0, numsSize - 1);
 }
+
+void rotate(int** matrix, int matrixSize, int* matrixColsize) {
+	int msize = *matrixColsize;
+	for (int i = 0; i < msize; i++) {
+		//TODO
+	}
+}
