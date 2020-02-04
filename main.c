@@ -139,32 +139,31 @@ void test_char() {
 }
 
 void test_merge(){
-	int intervalsSize = 2;
-	int intervalsColSize = 2;
- 	int returnSize = 0;
-	int *returnColumnSizes = NULL;
-	int area0[2] = {1, 4};
-	int area1[2] = {4, 5};
+	int iSize = 2;
+	int iColSize = 2;
+	int retSize = 0;
+	int *retColSizes = NULL;
+	int area[][2] = {{1, 4}, {4, 5}};
 
-	int *intervals[intervalsSize];
-	intervals[0] = area0;
-	intervals[1] = area1;
+	int *intervals[iSize];
+	for(int i = 0; i < iSize; i++) {
+		intervals[i] = area[i];
+	}
 
-	merge(intervals, intervalsSize, &intervalsColSize, &returnSize, &returnColumnSizes); 
+	merge(intervals, iSize, &iColSize, &retSize, &retColSizes);
 }
 
 void test_merge_null(){
-	int intervalsSize = 1;
-	int intervalsColSize = 2;
- 	int returnSize = 0;
-	int *returnColumnSizes = NULL;
-	int area0[2] = {};
+	int iSize = 1;
+	int iColSize = 2;
+	int retSize = 0;
+	int *retColSizes = NULL;
+	int area[2] = {};
 
-	
-	int *intervals[intervalsSize];
-	intervals[0] = area0;
+	int *intervals[iSize];
+	intervals[0] = area;
 
-	merge(intervals, intervalsSize, &intervalsColSize, &returnSize, &returnColumnSizes); 
+	merge(intervals, iSize, &iColSize, &retSize, &retColSizes);
 }
 
 void test_longeststr() {
@@ -355,7 +354,7 @@ void test_rotateMatrix() {
 
 int main() {
 
-	test_nextPermutation();
+	test_merge_null();
 
 	return 0;
 }

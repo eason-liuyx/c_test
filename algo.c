@@ -525,28 +525,45 @@ int** sort_interval(int** intervals, int intervalsSize){
 	return intervals;
 }
 
-int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes){
+int** merge(int** intervals, int intervalsSize, int* intervalsColSize,
+	    int* returnSize, int** returnColumnSizes){
+	int isize = intervalsSize;
 	int mergecnt = 0;
 	int k = 0;
 	int i;
-	printf("intervalsSize is %d, intervalcolsize is %d\n", intervalsSize, *intervalsColSize);
-	if (intervalsSize == 1) {
-		printf("coming here\n");
+	printf("iSize is %d, icolsize is %d\n", isize, *intervalsColSize);
+	if (isize == 0) {
+		int** array = (int**)malloc(sizeof(int *));
+		array[0] = malloc(sizeof(int));
+		array[0] = NULL;
+		*returnSize = 0;
+		int** returnColumnSizes = (int **)malloc(sizeof(int *));
+		returnColumnSizes[0] = malloc(sizeof(int));
+		returnColumnSizes[0][0] = 2;
+		return NULL;
+	}
+
+	if (isize == 1) {
 		int** array = (int **)malloc(sizeof(int *));
 		array[0] = malloc(sizeof(int) * 2);
 		array[0] = intervals[0];
+
+		int** returnColumnSizes = (int **)malloc(sizeof(int *));
+		returnColumnSizes[0] = malloc(sizeof(int));
+		returnColumnSizes[0][0] = 2;
+
 		return array;
 	}
 
-	intervals = sort_interval(intervals, intervalsSize); //排序
+	intervals = sort_interval(intervals, isize); //排序
 
-	for (i = 0; i < intervalsSize; i++){
+	for (i = 0; i < isize; i++){
 		printf("original inter[%d], %d, %d\n", i, intervals[i][0], intervals[i][1]);
 	}
 
 	//merge interval
 	int curend, nextstart;
-	for (i = 0; i < intervalsSize - 1; i++){
+	for (i = 0; i < isize - 1; i++){
 		curend = intervals[i][1];
 		nextstart = intervals[i + 1][0];
 		if (curend >= nextstart){
@@ -557,11 +574,11 @@ int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* retu
 		}
 	}
 
-	for (i = 0; i < intervalsSize; i++){
+	for (i = 0; i < isize; i++){
 		printf("after merge inter[%d], %d, %d\n", i, intervals[i][0], intervals[i][1]);
 	}
 
-	int retsz = intervalsSize - mergecnt;    // 行数
+	int retsz = isize - mergecnt;    // 行数
 
 	//malloc array
 	int** array = (int **)malloc(sizeof(int *) * retsz);
