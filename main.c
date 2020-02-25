@@ -354,7 +354,7 @@ void test_rotateMatrix() {
 
 int main() {
 
-	test_merge_null();
+	test_nextPermutation();
 
 	return 0;
 }

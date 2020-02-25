@@ -1232,3 +1232,100 @@ void rotate(int** matrix, int matrixSize, int* matrixColsize) {
 		//TODO
 	}
 }
+
+# if 0
+#define MAX_GROUP 15
+
+struct intvs {
+	int a; // start value
+	int b; // end value
+	int calc_flag; // indicate this interval is already added to sum.
+	int invalid; // 1: indicate this interval is invalid, 0: valid
+};
+
+int calc_intervals(struct intvs *intv, int num){
+	int total;
+	int nextstart;
+	int curend;
+	for (int i = 0; i < num; i++) {
+
+		curend = intv[i].b;
+		nextstart = intv[i + 1].a;
+		if (nextstart <= curend)
+			intv[i + 1][1] = intv[i][1] + intv[i + 1][1];
+
+		if (nextstart > curend)
+			if (nextstart + intv[i][0] <= intv[i + 1][1])
+				intv[i + 1][1] = intv[i][1] + intv[i + 1][1];
+}
+
+void merge_intervals(struct intvs *intv, int num) {
+	int curend, nextstart;
+	for (int i = 0; i < num; i++) {
+		curend = intv[i].b;
+		nextstart = intv[i + 1].a;
+
+		if (nextstart <= curend) {
+			intv[i].invalid = 1;
+			intv[i + 1].b = intv[i].b + intv[i + 1].b;
+		}
+}
+
+void sort_intervals(struct intvs *intv, int num){
+	int tmpstart, tmpend;
+	int curstart, nextstart;
+	for (int i = 0; i < num - 1; i++){
+		curstart = intv[i].a;
+		nextstart = intv[i + 1].a;
+
+		if (curstart > nextstart){
+		tmpstart = intv[i].a;
+		tmpend = intv[i].b;
+		intv[i].a = intv[i + 1].a;
+		intv[i].b = intv[i + 1].b;
+		intv[i + 1].a = tmpstart;
+		intv[i + 1].b = tmpend;
+		}
+	}
+}
+
+void calcSum() {
+	int n;
+	int a[MAX_GROUP];
+	int b[MAX_GROUP];
+	int region[MAX_GROUP * 4][2];
+	int *intvs[MAX_GROUP];
+	int total;
+
+//	struct intervals *intv = malloc(sizeof(struct intervals) * MAX_GROUP);
+
+	scanf("%d", &n);
+
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &a[i]);
+	}
+	
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &b[i]);
+	}
+
+	/* n is even */
+	if (n % 2 == 0) {
+		for (int i = 0; i < n / 2; i++) {
+			int j = 4 * i;
+			region[j][0] = a[i];
+			region[j][1] = b[i];
+			region[j + 1][0] = a[i + 1];
+			region[j + 1][1] = b[i + 1];
+			region[j + 2][0] = a[i] + a[i + 1];
+			region[j + 2][1] = a[i] + b[i + 1];
+			region[j + 3][0] = b[i] + a[i + 1];
+			region[j + 3][1] = b[i] + b[i + 1];
+		}
+	} else {
+
+	merge_intervals(intv, n);
+	total = calc_intervals(intv, n);
+}
+
+#endif
