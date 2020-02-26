@@ -1329,3 +1329,102 @@ void calcSum() {
 }
 
 #endif
+
+/* Delete a minimal number to keep a sequence order */
+int deleteOrder(void)
+{
+	int n;
+	if (scanf("%d\n", &n) != 1)
+		return -1;
+
+	if (n == 2) {
+		printf("-1");
+		return 0;
+	}
+
+	int a[n];
+	int flag[n];
+	int inc_num = 0;
+	int dec_num = 0;
+	int sum = 0;
+	int ret = -1;
+
+	int i;
+	for (i = 0; i < n; i++) {
+		int v;
+		if (scanf("%d", &v) != 1)
+			return -1;
+
+		a[i] = v;
+
+		if (i >= 1) {
+			flag[i] = 0;
+			if (a[i] > a[i - 1]) {
+				flag[i] = 1; //inc
+				inc_num++;
+			} else if (a[i] < a[i -1]) {
+				flag[i] = -1; //dec
+				dec_num++;
+			} else if (a[i] == a[i -1]) {
+				flag[i] = 2;
+			}
+		}
+	}
+
+	if (inc_num >= dec_num) {
+		for (i = 1; i < n; i++) {
+			if (flag[i] == 2)
+				flag[i] = 1;
+			sum = sum + flag[i];
+		}
+	} else {
+		for (i = 1; i < n; i++) {
+			if (flag[i] == 2)
+				flag[i] = -1;
+			sum = sum + flag[i];
+		}
+	}
+
+	if (n == 3) {
+		int tmp = 0;
+		tmp = (a[0] <= a[1]) ? a[0] : a[1];
+		ret = tmp <= a[2] ? tmp : a[2];
+	}
+
+	if (sum == (n - 3)) {
+		for (i = 1; i < n; i++) {
+			if((flag[i] == -1) && (i == 1)) {
+				if (a[i - 1] <= a[i + 1])
+					ret = a[i];
+				else
+					ret = a[i - 1];
+			} else if ((flag[i] == -1) && (i == (n - 1))) {
+				ret = a[i];
+			} else if (flag[i] == -1) {
+				if (a[i- 1] >= a[i - 2] && a[i - 1] <= a[i + 1])
+				    ret = a[i];
+				else
+				    ret = a[i - 1];
+			}
+		}
+	} else if (sum == (3 - n)) {
+		for (i = 1; i < n; i++) {
+			if ((flag[i] == 1) && (i == 1)) {
+				ret = a[i - 1];
+			} else if ((flag[i] == 1) && (i == (n - 1))) {
+				if (a[i] <= a[i - 2])
+					ret = a[i - 1];
+				else
+					ret = a[i];
+			} else if (flag[i] == 1) {
+				if (a[i] <= a[i - 2] && a[i] >= a[i + 1])
+					ret = a[i - 1];
+				else
+					ret = a[i];
+			}
+		}
+	}
+
+	printf("%d\n", ret);
+	return 0;
+}

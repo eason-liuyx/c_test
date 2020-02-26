@@ -352,9 +352,13 @@ void test_rotateMatrix() {
 	}
 }
 
+void test_deleteOrder() {
+	deleteOrder();
+}
+
 int main() {
 
-	test_nextPermutation();
+	test_deleteOrder();
 
 	return 0;
 }
