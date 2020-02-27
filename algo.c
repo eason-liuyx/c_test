@@ -1484,3 +1484,103 @@ int closeLight(void)
 		}
 	}
 }
+
+void floyd(int *a, int n)
+{
+	int d[n][n];
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			d[i][j] = *(a + i * n + j);
+		}
+	}
+
+	for (int tmp = 0; tmp < n; tmp++) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if ((d[i][tmp] != -1) && (d[tmp][j]!= -1)) {
+					if (d[i][j] == -1) {
+						d[i][j] = d[i][tmp] + d[tmp][j];
+					} else if (d[i][j] > (d[i][tmp] + d[tmp][j])) {
+						d[i][j] = d[i][tmp] + d[tmp][j];
+					}
+				}
+				*(a + i * n + j) = d[i][j];
+			}
+		}
+	}
+}
+
+void update_floyd(int *p, int n, int a[4])
+{
+	int d[n][n];
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			d[i][j] = *(p + i * n + j);
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			d[i][j] = min(d[i][j],
+				      min(d[i][a[1]] + a[3] + d[a[2]][j],
+					  d[i][a[2]] + a[3] + d[a[1]][j]));
+			*(p + i * n + j) = d[i][j];
+		}
+	}
+}
+
+int scenceDistance()
+{
+	int n;
+	scanf("%d", &n);
+
+	int d[n][n];
+	int *p;
+
+	int v;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			scanf("%d", &v);
+			d[i][j] = v;
+		}
+	}
+
+	p = &d[0][0];
+	floyd(p, n);
+
+	int t; // t is P
+	scanf("%d", &t);
+
+	int a[t][4];
+	for (int i = 0; i < t; i++) {
+		scanf("%d", &v);
+		a[i][0] = v;
+		if (a[i][0] == 1) {
+			scanf("%d", &v);
+			a[i][1] = v - 1;
+			scanf("%d", &v);
+			a[i][2] = v - 1;
+		} else {
+			scanf("%d", &v);
+			a[i][1] = v - 1;
+			scanf("%d", &v);
+			a[i][2] = v - 1;
+			scanf("%d", &v);
+			a[i][3] = v;
+		}
+	}
+
+	int ret;
+	for (int k = 0; k < t; k++) {
+		if (a[k][0] == 1) {
+			ret = d[a[k][1]][a[k][2]];
+			printf("%d\n", ret);
+		} else {
+			update_floyd(p, n, a[k]);
+		}
+	}
+
+	return 0;
+}

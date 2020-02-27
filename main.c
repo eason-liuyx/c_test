@@ -352,13 +352,20 @@ void test_rotateMatrix() {
 	}
 }
 
-void test_deleteOrder() {
+	void test_deleteOrder() {
 	deleteOrder();
+}
+
+void test_scenceDistance()
+{
+	int ret;
+	ret = scenceDistance();
+	printf("%d\n", ret);
 }
 
 int main() {
 
-	test_deleteOrder();
+	test_scenceDistance();
 
 	return 0;
 }
