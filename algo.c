@@ -1428,3 +1428,59 @@ int deleteOrder(void)
 	printf("%d\n", ret);
 	return 0;
 }
+
+void dfs_light(int** a, int i, int j, int row, int col, int n, int* timeLimit)
+{
+	int Lightnum;
+	int max_lightnum;
+
+	/* find */
+	if (a[i][j] == 1 || *timeLimit <= 0)
+		return;
+
+	if (row < 0 || row >= n || col < 0 || col >= n)
+		return;
+
+	*timeLimit = *timeLimit - 1;
+
+	int direction[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+	/* forward */
+	if (a[i][j] != 4) {
+		if (a[i][j] == 2)
+			Lightnum = Lightnum + 1;
+
+		for (int k = 0; k < 4; k++) {
+			dfs_light(a, i + direction[k][0], j + direction[k][1],
+				  row, col, n, timeLimit);
+		}
+
+	} else {
+		/* done */
+		printf("%d\n", max_lightnum);
+	}
+
+	/* back */
+}
+
+int closeLight(void)
+{
+	int n;
+	if (scanf("%d\n", &n) != 1)
+		return -1;
+
+	int timeLimit;
+	if (scanf("%d\n", &timeLimit) != 1)
+		return -1;
+
+	int a[n][n];
+	int v;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (scanf("%d\n", &v) != 1)
+				return -1;
+
+			a[i][j] = v;
+		}
+	}
+}
