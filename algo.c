@@ -1429,62 +1429,6 @@ int deleteOrder(void)
 	return 0;
 }
 
-void dfs_light(int** a, int i, int j, int row, int col, int n, int* timeLimit)
-{
-	int Lightnum;
-	int max_lightnum;
-
-	/* find */
-	if (a[i][j] == 1 || *timeLimit <= 0)
-		return;
-
-	if (row < 0 || row >= n || col < 0 || col >= n)
-		return;
-
-	*timeLimit = *timeLimit - 1;
-
-	int direction[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-	/* forward */
-	if (a[i][j] != 4) {
-		if (a[i][j] == 2)
-			Lightnum = Lightnum + 1;
-
-		for (int k = 0; k < 4; k++) {
-			dfs_light(a, i + direction[k][0], j + direction[k][1],
-				  row, col, n, timeLimit);
-		}
-
-	} else {
-		/* done */
-		printf("%d\n", max_lightnum);
-	}
-
-	/* back */
-}
-
-int closeLight(void)
-{
-	int n;
-	if (scanf("%d\n", &n) != 1)
-		return -1;
-
-	int timeLimit;
-	if (scanf("%d\n", &timeLimit) != 1)
-		return -1;
-
-	int a[n][n];
-	int v;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			if (scanf("%d\n", &v) != 1)
-				return -1;
-
-			a[i][j] = v;
-		}
-	}
-}
-
 void floyd(int *a, int n)
 {
 	int d[n][n];
@@ -1582,5 +1526,142 @@ int scenceDistance()
 		}
 	}
 
+	return 0;
+}
+
+bool hasTime(int *a, int n, int cur[2], int door[2], int timeLimit)
+{
+	if (timeLimit <= 0 && (*(a + cur[0] * n + cur[1]) != 4))
+		return false;
+
+	int dis;
+	dis = abs(cur[0] - door[0]) + abs(cur[1] - door[1]);
+	if (dis > timeLimit)
+		return false;
+
+	return true;
+}
+
+bool canPass(int *a, int n, int cur[2], int next[2], int pre[2])
+{
+	if (cur[0] < 0 || cur[0] >= n || cur[1] < 0 || cur[1] >= n)
+		return false;
+
+	if (*(a + cur[0] * n + cur[1]) == 1)
+		return false;
+
+	if (next[0] == pre[0] && next[1] == pre[1])
+		return false;
+
+	return true;
+}
+
+void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2], int door[2], int *maxLight, int *Lightnum, int *v)
+{
+	int cur[2] = {i, j};
+	int next[2];
+
+	if (*(a + n * i + j) == 4) {
+		*maxLight = max(*maxLight, *Lightnum);
+		return;
+	}
+
+	*(v + n * i + j) += 1;
+
+	if (*(a + n * i + j) == 2)
+		(*Lightnum)++;
+
+	int dir[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+	for (int k = 0; k < 4; k++) {
+		next[0] = cur[0] + dir[k][0];
+		next[1] = cur[1] + dir[k][1];
+		if (hasTime(a, n, cur, door, timeLimit) &&
+		    canPass(a, n, cur, next, pre))
+			dfs_light(a, n, next[0], next[1], timeLimit - 1, cur, door, maxLight, Lightnum, v);
+	}
+
+	if (*(a + n * i + j) == 2)
+		(*Lightnum)--;
+
+}
+
+int closeLight()
+{
+	int n;
+	scanf("%d", &n);
+
+	int node[n][n];
+	int vs[n][n]; //visit
+	int *a, *p;
+	int pos[2];
+	int door[2];
+	int maxLight = 0;
+	int Lightnum = 0;
+
+	int timeLimit;
+	scanf("%d", &timeLimit);
+
+	int v;
+
+	for(int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			scanf("%d", &v);
+			node[i][j] = v;
+			vs[i][j] = 0;
+			if (v == 3) {
+				pos[0] = i;
+				pos[1] = j;
+			}
+			if (v == 4) {
+				door[0] = i;
+				door[1] = j;
+			}
+		}
+	}
+
+	a = &node[0][0];
+	p = &vs[0][0];
+	dfs_light(a, n, pos[0], pos[1], timeLimit, pos, door, &maxLight, &Lightnum, p);
+
+
+
+	for(int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			printf("%d ", vs[i][j]);
+		}
+		printf("\n");
+	}
+
+	int start = min(pos[0], door[0]);
+	int end = max(pos[0], door[0]);
+	int sum;
+	if (end - start > 2) {
+		for (int i = start; i < end; i++) {
+			sum = 0;
+			for (int j = 0; j < n; j++)
+				sum = sum + vs[i][j];
+			if (sum == 0) {
+				printf("%d\n", -1);
+				goto out;
+			}
+		}
+	}
+	start = min(pos[1], door[1]);
+	end = max(pos[1], door[1]);
+	sum = 0;
+	if (end - start > 2) {
+		for (int j = start; j < end; j++) {
+			sum = 0;
+			for (int i = 0; i < n; i++)
+				sum = sum + vs[i][j];
+			if (sum == 0) {
+				printf("%d\n", -1);
+				goto out;
+			}
+		}
+	}
+	printf("%d\n", maxLight);
+out:
 	return 0;
 }

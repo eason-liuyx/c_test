@@ -363,9 +363,14 @@ void test_scenceDistance()
 	printf("%d\n", ret);
 }
 
+void test_closeLight()
+{
+	closeLight();
+}
+
 int main() {
 
-	test_scenceDistance();
+	test_closeLight();
 
 	return 0;
 }
