@@ -1393,34 +1393,36 @@ int deleteOrder(void)
 
 	if (sum == (n - 3)) {
 		for (i = 1; i < n; i++) {
-			if((flag[i] == -1) && (i == 1)) {
-				if (a[i - 1] <= a[i + 1])
+			if (flag[i] == -1) {
+				if (i == 1)
+					ret =  (a[i - 1] <= a[i + 1]) ? a[i] : a[i - 1];
+				else if (i == (n - 1))
 					ret = a[i];
-				else
-					ret = a[i - 1];
-			} else if ((flag[i] == -1) && (i == (n - 1))) {
-				ret = a[i];
-			} else if (flag[i] == -1) {
-				if (a[i- 1] >= a[i - 2] && a[i - 1] <= a[i + 1])
-				    ret = a[i];
-				else
-				    ret = a[i - 1];
+				else {
+					if (a[i - 1] <= a[i + 1])
+						ret = a[i];
+					else if (a[i] >= a[i - 2])
+						ret = a[i - 1];
+					else
+						ret = -1;
+				}
 			}
 		}
 	} else if (sum == (3 - n)) {
 		for (i = 1; i < n; i++) {
-			if ((flag[i] == 1) && (i == 1)) {
-				ret = a[i - 1];
-			} else if ((flag[i] == 1) && (i == (n - 1))) {
-				if (a[i] <= a[i - 2])
+			if (flag[i] == 1) {
+				if (i == 1)
 					ret = a[i - 1];
-				else
-					ret = a[i];
-			} else if (flag[i] == 1) {
-				if (a[i] <= a[i - 2] && a[i] >= a[i + 1])
-					ret = a[i - 1];
-				else
-					ret = a[i];
+				else if (i == (n - 1))
+					ret = a[i] <= a[i - 2] ? a[i - 1] : a[i];
+				else {
+					if (a[i] <= a[i - 2])
+						ret = a[i - 1];
+					else if (a[i - 1] >= a[i + 1])
+						ret = a[i];
+					else
+						ret = -1;
+				}
 			}
 		}
 	}
