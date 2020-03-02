@@ -1578,7 +1578,7 @@ void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2], int door[
 	for (int k = 0; k < 4; k++) {
 		next[0] = cur[0] + dir[k][0];
 		next[1] = cur[1] + dir[k][1];
-		if (hasTime(a, n, cur, door, timeLimit) &&
+		if (hasTime(a, n, next, door, timeLimit - 1) &&
 		    canPass(a, n, cur, next, pre))
 			dfs_light(a, n, next[0], next[1], timeLimit - 1, cur, door, maxLight, Lightnum, v);
 	}

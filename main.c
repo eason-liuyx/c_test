@@ -370,7 +370,7 @@ void test_closeLight()
 
 int main() {
 
-	test_deleteOrder();
+	test_closeLight();
 
 	return 0;
 }
