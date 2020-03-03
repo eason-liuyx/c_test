@@ -497,13 +497,17 @@ void serial_bitree(struct TreeNode* root, int* array){
 }
 
 struct TreeNode** findDuplicateSubtrees(struct TreeNode* root, int* returnSize){
+	struct TreeNode** pNode = malloc(sizeof(struct TreeNode*));
 	int node_num = 0;
 
+	*pNode = root;
 	traverse_bitree(root, &node_num);
 
 	int* array_list = calloc(node_num, sizeof(int));
 
 	serial_bitree(root, array_list);
+
+	return pNode;
 }
 
 int** sort_interval(int** intervals, int intervalsSize){
