@@ -1548,12 +1548,12 @@ bool hasTime(int *a, int n, int cur[2], int door[2], int timeLimit)
 	return true;
 }
 
-bool canPass(int *a, int n, int cur[2], int next[2], int pre[2])
+bool canPass(int *a, int n, int next[2], int pre[2])
 {
-	if (cur[0] < 0 || cur[0] >= n || cur[1] < 0 || cur[1] >= n)
+	if (next[0] < 0 || next[0] >= n || next[1] < 0 || next[1] >= n)
 		return false;
 
-	if (*(a + cur[0] * n + cur[1]) == 1)
+	if (*(a + next[0] * n + next[1]) == 1)
 		return false;
 
 	if (next[0] == pre[0] && next[1] == pre[1])
@@ -1615,7 +1615,7 @@ void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2],
 	for (int k = 0; k < 4; k++) {
 		next[0] = cur[0] + dir[k][0];
 		next[1] = cur[1] + dir[k][1];
-		if (hasTime(a, n, cur, door, timeLimit) && canPass(a, n, cur, next, pre))
+		if (hasTime(a, n, next, door, timeLimit - 1) && canPass(a, n, next, pre))
 			dfs_light(a, n, next[0], next[1], timeLimit - 1, cur,
 				  door, maxLight, Lightnum, v);
 	}
