@@ -1558,7 +1558,40 @@ bool canPass(int *a, int n, int cur[2], int next[2], int pre[2])
 	return true;
 }
 
-void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2], int door[2], int *maxLight, int *Lightnum, int *v)
+bool isBlocked(int *v, int n, int pos[2], int door[2])
+{
+	int start = min(pos[0], door[0]);
+	int end = max(pos[0], door[0]);
+	int sum;
+	if (end - start > 2) {
+		for (int i = start; i < end; i++) {
+			sum = 0;
+			for (int j = 0; j < n; j++)
+				sum = sum + *(v + n * i + j);
+			if (sum == 0) {
+				printf("%d\n", -1);
+				return true;
+			}
+		}
+	}
+	start = min(pos[1], door[1]);
+	end = max(pos[1], door[1]);
+	if (end - start > 2) {
+		for (int j = start; j < end; j++) {
+			sum = 0;
+			for (int i = 0; i < n; i++)
+				sum = sum + *(v + n * i + j);
+			if (sum == 0) {
+				printf("%d\n", -1);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2],
+	       int door[2], int *maxLight, int *Lightnum, int *v)
 {
 	int cur[2] = {i, j};
 	int next[2];
@@ -1578,14 +1611,13 @@ void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2], int door[
 	for (int k = 0; k < 4; k++) {
 		next[0] = cur[0] + dir[k][0];
 		next[1] = cur[1] + dir[k][1];
-		if (hasTime(a, n, next, door, timeLimit - 1) &&
-		    canPass(a, n, cur, next, pre))
-			dfs_light(a, n, next[0], next[1], timeLimit - 1, cur, door, maxLight, Lightnum, v);
+		if (hasTime(a, n, cur, door, timeLimit) && canPass(a, n, cur, next, pre))
+			dfs_light(a, n, next[0], next[1], timeLimit - 1, cur,
+				  door, maxLight, Lightnum, v);
 	}
 
 	if (*(a + n * i + j) == 2)
 		(*Lightnum)--;
-
 }
 
 int closeLight()
@@ -1605,7 +1637,6 @@ int closeLight()
 	scanf("%d", &timeLimit);
 
 	int v;
-
 	for(int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
 			scanf("%d", &v);
@@ -1624,45 +1655,20 @@ int closeLight()
 
 	a = &node[0][0];
 	p = &vs[0][0];
+
 	dfs_light(a, n, pos[0], pos[1], timeLimit, pos, door, &maxLight, &Lightnum, p);
 
-
-
+	// for debug
 	for(int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
+		for (int j = 0; j < n; j++)
 			printf("%d ", vs[i][j]);
-		}
+
 		printf("\n");
 	}
 
-	int start = min(pos[0], door[0]);
-	int end = max(pos[0], door[0]);
-	int sum;
-	if (end - start > 2) {
-		for (int i = start; i < end; i++) {
-			sum = 0;
-			for (int j = 0; j < n; j++)
-				sum = sum + vs[i][j];
-			if (sum == 0) {
-				printf("%d\n", -1);
-				goto out;
-			}
-		}
-	}
-	start = min(pos[1], door[1]);
-	end = max(pos[1], door[1]);
-	sum = 0;
-	if (end - start > 2) {
-		for (int j = start; j < end; j++) {
-			sum = 0;
-			for (int i = 0; i < n; i++)
-				sum = sum + vs[i][j];
-			if (sum == 0) {
-				printf("%d\n", -1);
-				goto out;
-			}
-		}
-	}
+	if (isBlocked(p, n, pos, door))
+		goto out;
+
 	printf("%d\n", maxLight);
 out:
 	return 0;
