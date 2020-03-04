@@ -368,9 +368,14 @@ void test_closeLight()
 	closeLight();
 }
 
+void test_carryNum()
+{
+	carryNum();
+}
+
 int main() {
 
-	test_closeLight();
+	test_carryNum();
 
 	return 0;
 }

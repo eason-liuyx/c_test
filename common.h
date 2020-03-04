@@ -64,3 +64,4 @@ int** merge(int** intervals, int intervalsSize, int* intervalsColSize,
 int deleteOrder(void);
 int scenceDistance();
 int closeLight();
+int carryNum();

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <math.h>
 #include "common.h"
 
 /**
@@ -1676,4 +1677,48 @@ int closeLight()
 	printf("%d\n", maxLight);
 out:
 	return 0;
+}
+
+int dec2bin(int x)
+{
+    if (x == 0)
+        return 0;
+
+    if (x == 1)
+        return 1;
+
+    int i;
+    int res = x;
+
+    for (i = 0; x > 1; i++)
+        x = x >> 1;
+
+    res = res - pow(2, i);
+
+    return 1 + dec2bin(res);
+}
+
+int carryNum()
+{
+    int a;
+    int b;
+
+    scanf("%d", &a);
+    scanf("%d", &b);
+
+    int sum = 0;
+    int num_1;
+    int total_1 = 0;
+    int ret;
+
+    for (int i = a; i < (b + 1); i++) {
+        sum += i;
+        num_1 = dec2bin(i);
+        total_1 += num_1;
+    }
+
+    ret = total_1 - dec2bin(sum);
+
+    printf("%d\n", ret);
+    return 0;
 }

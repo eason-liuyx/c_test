@@ -5,7 +5,7 @@ CFLAGS=-g -std=gnu99
 
 
 $(PROGRAM): $(OBJS)
-	$(CC) $(OBJS) -o $(PROGRAM)
+	$(CC) $(OBJS) -o $(PROGRAM) -lm
 
 clean:
 	@- $(RM) $(PROGRAM)
