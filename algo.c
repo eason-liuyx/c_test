@@ -1722,3 +1722,35 @@ int carryNum()
     printf("%d\n", ret);
     return 0;
 }
+
+unsigned long Fobric(int n, unsigned long *a)
+{
+	if (n == 0) {
+		a[0] = 0;
+		return 0;
+	}
+
+	if (n == 1) {
+		a[1] = 1;
+		return 1;
+	}
+
+	if (a[n])
+		return a[n];
+	
+	return	a[n] = (Fobric(n - 1, a) + Fobric(n - 2, a)) % 1000000007;
+}
+
+void calcFobric()
+{
+	int n;
+	scanf("%d", &n);
+
+	unsigned long ret;
+	unsigned long a[101] = {};
+	if (n <= 0)
+		printf("-1\n");
+
+	ret = Fobric(n, a);
+	printf("%lu\n", ret);
+}

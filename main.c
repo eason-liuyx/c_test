@@ -373,9 +373,14 @@ void test_carryNum()
 	carryNum();
 }
 
+void test_fobric()
+{
+	calcFobric();
+}
+
 int main() {
 
-	test_carryNum();
+	test_fobric();
 
 	return 0;
 }

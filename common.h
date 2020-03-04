@@ -65,3 +65,4 @@ int deleteOrder(void);
 int scenceDistance();
 int closeLight();
 int carryNum();
+void calcFobric();
