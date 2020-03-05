@@ -1754,3 +1754,45 @@ void calcFobric()
 	ret = Fobric(n, a);
 	printf("%lu\n", ret);
 }
+
+int mergeChar()
+{
+    int k;
+    char s[10000] = "";
+    int sl; //srting len
+    int ret;
+
+    scanf("%d", &k);
+    scanf("%s", s);
+
+    sl = strlen(s);
+    int reg_cnt = 1;
+    int reg_len[sl];
+    int tmp_len = 1;
+    int total = 0; // the total number of selection for k
+    for (int i = 1; i < sl; i++) {
+        if (s[i] == s[i - 1])
+           tmp_len++;
+        else {
+            reg_len[reg_cnt - 1] = tmp_len;
+	    reg_cnt++;
+            tmp_len = 1;
+        }
+    }
+
+    reg_len[reg_cnt - 1] = tmp_len;
+
+    if (k == 1)
+	ret = 1;
+    else if (k > reg_cnt)
+        ret = 0;
+    else {
+        for (int j = 0; j < (reg_cnt - k + 1); j++)
+            total += reg_len[j] * reg_len[j + k - 1];
+
+        ret = total;
+    }
+
+    printf("%d", ret);
+    return 0;
+}

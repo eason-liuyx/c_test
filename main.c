@@ -378,9 +378,14 @@ void test_fobric()
 	calcFobric();
 }
 
+void test_mergechar()
+{
+	mergeChar();
+}
+
 int main() {
 
-	test_fobric();
+	test_mergechar();
 
 	return 0;
 }

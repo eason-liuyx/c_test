@@ -66,3 +66,4 @@ int scenceDistance();
 int closeLight();
 int carryNum();
 void calcFobric();
+int mergeChar();
