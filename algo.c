@@ -1601,7 +1601,7 @@ void dfs_light(int *a, int n, int i, int j, int timeLimit, int pre[2],
 	int cur[2] = {i, j};
 	int next[2];
 
-	if (*(a + n * i + j) == 4) {
+	if (timeLimit == 0 && *(a + n * i + j) == 4) {
 		*maxLight = max(*maxLight, *Lightnum);
 		return;
 	}
