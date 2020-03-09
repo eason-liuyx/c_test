@@ -1782,11 +1782,16 @@ int mergeChar()
 
     reg_len[reg_cnt - 1] = tmp_len;
 
-    if (k == 1)
-	ret = 1;
-    else if (k > reg_cnt)
+    if (k > reg_cnt)
         ret = 0;
-    else {
+    else if (k == 1) {
+        for (int j = 0; j < reg_cnt; j++)
+		for (int i = 1; i < reg_len[j]; i++) {
+			total += i;
+		}
+
+	ret = total;
+    } else {
         for (int j = 0; j < (reg_cnt - k + 1); j++)
             total += reg_len[j] * reg_len[j + k - 1];
 
