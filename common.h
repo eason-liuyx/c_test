@@ -67,3 +67,4 @@ int closeLight();
 int carryNum();
 void calcFobric();
 int mergeChar();
+void collectCoins ();

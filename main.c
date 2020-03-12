@@ -383,9 +383,14 @@ void test_mergechar()
 	mergeChar();
 }
 
+void test_collectCoin()
+{
+	collectCoins();
+}
+
 int main() {
 
-	test_mergechar();
+	test_collectCoin();
 
 	return 0;
 }

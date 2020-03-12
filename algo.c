@@ -1801,3 +1801,139 @@ int mergeChar()
     printf("%d", ret);
     return 0;
 }
+
+#if 1
+int coin_num = 0;
+int visit_num = 1;
+
+bool coin_canpass(char *a, int cur[2], int pre[2], int r, int c, int * v_flag)
+{
+	if (*(v_flag + cur[0] * c + cur[1]) == 1)
+		return false;
+
+	int i = 2 * cur[0] - pre[0];
+	int j = 2 * cur[1] - pre[1];
+	if (cur[0] < 0 || cur[0] >= r || cur[1] < 0 || cur[1] >= c)
+		return false;
+
+	if (*(a + cur[0] * c + cur[1]) == 'X') {
+		visit_num++;
+		return false;
+	}
+
+	if (cur[0] == pre[0] && cur[1] == pre[1])
+		return false;
+
+	if (*(a + cur[0] * c + cur[1]) == 'O') {
+		visit_num++;
+		if (i >= 0 && i < r && j >= 0 && j < c &&
+		    *(a + i * c + j) == '.') {
+			*(a + i * c + j) == 'X';
+			return true;
+		} else {
+			*(a + cur[0] * c + cur[1]) == 'X'; 
+			return false;
+		}
+	}
+
+	if (*(a + cur[0] * c + cur[1]) == 'C') {
+		coin_num++;
+		visit_num++;
+		*(a + cur[0] * c + cur[1]) = '.';
+	}
+
+	*(v_flag + cur[0] * c + cur[1]) = 1;
+	return true;
+}
+
+
+void coin_dfs(char *a, int i, int j, int pre[2], int r, int c, int* v_flag) {
+	int cur[2];
+	cur[0] = i;
+	cur[1] = j;
+
+	if (visit_num == r * c) {
+		printf("%d\n", coin_num);
+		return;
+	}
+
+
+	int direct[4][2] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+	int next[2];
+	for (int k = 0; k < 4; k++) {
+		next[0] = cur[0] + direct[k][0];
+		next[1] = cur[1] + direct[k][1];
+		if (coin_canpass(a, next, pre, r, c, v_flag)) {
+			coin_dfs(a, next[0], next[1], cur, r, c, v_flag);
+		}
+
+	}
+	visit_num++;
+}
+
+#endif
+void __collectcoin(char *a, int r, int c)
+{
+	int m_flag[r][c]; // flag for move
+	int v_flag[r][c]; // flag for visit
+	int *v;
+
+	int cur[2];
+	int next[2];
+	int num;
+ 	char ch[r + 1];
+ 	char val;
+     	for (int i = 0; i < r; i++) {
+ 	        scanf("%s", ch);
+ 	//	(a + c * i) = ch;
+ 		for (int j = 0; j < c; j++) {
+			m_flag[i][j] = 0;
+			v_flag[i][j] = 0;
+ 			val = ch[j];
+ 			val = ch[j];
+     			*(a + c * i + j) = val; 
+ 			if (val == 'S') {
+				cur[0] = i;
+				cur[1] = j;
+			}
+ 		}
+ 	}
+	v = &v_flag[0][0];
+	coin_dfs(a, cur[0], cur[1],  cur, r, c, v);
+}
+
+void collectCoins ()
+{
+	int T;
+	scanf("%d", &T);
+
+	char a[T * 100];
+	int array_sz[T][2];
+	int r;
+	int c;
+
+
+
+	for (int t = 0; t < T; t++) {
+		scanf("%d", &r);
+	        scanf("%d", &c);
+		array_sz[t][0] = r;
+		array_sz[t][1] = c;
+        	printf("r:%d, c:%d\n", r, c);
+		coin_num = 0;
+		visit_num = 1;
+		__collectcoin(a + t * 100, r, c);
+	}
+
+#if 0
+	for (int t = 0; t < T; t++) {
+		for (int i = 0; i < r; i++) {
+			for (int j = 0; j < c; j++) {
+				printf("%c", *(a + t * 100 + c * i + j));
+			}
+		}
+	}
+#endif
+//	printf("%d\n", coin_num);
+}
+
