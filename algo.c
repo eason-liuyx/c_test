@@ -1937,3 +1937,96 @@ void collectCoins ()
 //	printf("%d\n", coin_num);
 }
 
+void fillNum()
+{
+	int a[9][9];
+	char str[9];
+	int map_r[9][10] = {0};
+	int map_c[9][10] = {0};
+	int map_3[9][10] = {0};
+	int map[81][10] = {0};
+	int num_0 = 0;
+	int total_0 = 0;
+	int first = 1;
+	int row, col;
+	int pos;
+	int i, j;
+	int idx;
+
+	for (i = 0; i < 9; i++) {
+		scanf("%s", str);
+		for (j = 0; j < 9; j++) {
+			a[i][j] = str[j] - '0';
+		}
+	}
+
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			idx = a[i][j];
+			map_r[i][idx] = 1;
+			map_c[j][idx] = 1;
+			map_3[(i / 3) * 3 + j / 3][idx] = 1;
+		}
+	}
+
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			for (int k = 0; k < 10; k++)
+			map[9 * i + j][k] = map_r[i][k] | map_c[j][k] |	map_3[(i/3) * 3 + j/3][k];
+		}
+	}
+
+loop:
+	for (i = 0; i < 81; i++) {
+		num_0 = 0;
+		pos = 0;
+		row = i / 9;
+		col = i - (i / 9) * 9;
+		if (a[row][col] == 0) {
+			for (j = 0; j < 10; j++) {
+				if (map[i][j] == 0) {
+					total_0 += 1;
+					num_0 += 1;
+					pos = j;
+				}
+			}
+			if (num_0 == 1) {
+				a[row][col] = pos;
+				map_r[row][pos] = 1;
+				map_c[col][pos] = 1;
+				map_3[(row/3) * 3 + col/3][pos] = 1;
+				total_0 -= 1;
+			}
+		}
+	}
+
+	printf("\n");
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			printf("%d", a[i][j]);
+		}
+		printf("\n");
+	}
+	if (total_0 > 0) {
+		total_0 = 0;
+
+	for (i = 0; i < 9; i++) {
+		for (j = 0; j < 9; j++) {
+			for (int k = 0; k < 10; k++)
+			map[9 * i + j][k] = map_r[i][k] | map_c[j][k] |	map_3[(i/3) * 3 + j/3][k];
+		}
+	}
+
+		goto loop;
+	}else {
+
+		printf("\n");
+		for (i = 0; i < 9; i++) {
+			for (j = 0; j < 9; j++) {
+				printf("%d", a[i][j]);
+			}
+			printf("\n");
+		}
+	}
+}
+

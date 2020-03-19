@@ -390,7 +390,7 @@ void test_collectCoin()
 
 int main() {
 
-	test_collectCoin();
+	fillNum();
 
 	return 0;
 }
