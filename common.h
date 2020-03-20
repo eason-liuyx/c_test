@@ -69,3 +69,4 @@ void calcFobric();
 int mergeChar();
 void collectCoins ();
 void fillNum();
+void fillPacket();

@@ -390,7 +390,7 @@ void test_collectCoin()
 
 int main() {
 
-	fillNum();
+	fillPacket();
 
 	return 0;
 }

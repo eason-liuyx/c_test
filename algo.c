@@ -2030,3 +2030,44 @@ loop:
 	}
 }
 
+int fill_flag = 0;
+void dfs_fill(int *w, int n, int idx, int sum, int target)
+{
+	if (target == sum && fill_flag == 0) {
+		fill_flag = 1;
+		printf("YES");
+		return;
+	}
+
+	if ((idx + 1) >= n)
+		return;
+
+	for (int i = (idx + 1); i < n; i++) {
+		if (target >= (sum + w[i])) {
+			dfs_fill(w, n, i, sum + w[i], target);
+		}
+	}
+}
+
+void fillPacket()
+{
+	int n;
+	int s;
+	int sum = 0;
+	scanf("%d" "%d", &n, &s);
+
+	int w[n];
+	for (int i = 0; i < n; i++) {
+		scanf("%d", &w[i]);
+	}
+
+	for (int i = 0; i < n; i++) {
+		dfs_fill(w, n, i, w[i], s);
+		sum = 0;
+	}
+
+	if (fill_flag == 0)
+		printf("NO");
+
+	return;
+}
