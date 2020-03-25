@@ -390,7 +390,7 @@ void test_collectCoin()
 
 int main() {
 
-	fillPacket();
+	cityRoad();
 
 	return 0;
 }

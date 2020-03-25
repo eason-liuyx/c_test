@@ -2071,3 +2071,54 @@ void fillPacket()
 
 	return;
 }
+
+int findroot(int x, int *pre)
+{
+	int r = x;
+	while (pre[r] != r)
+		r = pre[r];
+
+	int i = x, j;
+	while (i != r)
+	{
+		j = pre[i];
+		pre[i] = r;
+		i = j;
+	}
+
+	return r;
+}
+
+int join(int x, int y, int *pre)
+{
+	int fx = findroot(x, pre), fy = findroot(y, pre);
+	int ret = 0;
+	if (fx != fy) {
+		pre[fx] = fy;
+		ret = 1; //need to join;
+	}
+	return ret;
+}
+
+void cityRoad()
+{
+	int n;
+	scanf("%d", &n);
+
+	int pre[n + 1];
+	for (int i = 0; i <= n; i++)
+		pre[i] = i;
+	int m;
+	scanf("%d", &m);
+
+	int a[m + 1][2];
+	int root1, root2;
+	int total = n - 1; //number of lines to connect all n nodes
+
+	for (int i = 1; i <= m; i++) {
+		scanf("%d %d", &a[i][0], &a[i][1]);
+		if (join(a[i][0], a[i][1], pre))
+			total--;
+	}
+	printf("%d\n", total);
+}

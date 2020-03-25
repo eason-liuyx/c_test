@@ -70,3 +70,4 @@ int mergeChar();
 void collectCoins ();
 void fillNum();
 void fillPacket();
+void cityRoad();
