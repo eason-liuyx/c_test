@@ -390,7 +390,7 @@ void test_collectCoin()
 
 int main() {
 
-	cityRoad();
+	jumpGame();
 
 	return 0;
 }

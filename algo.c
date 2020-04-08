@@ -2122,3 +2122,93 @@ void cityRoad()
 	}
 	printf("%d\n", total);
 }
+
+char minipath[200] = "T";
+
+bool jump_canPass(char *a, int n, int m, int k, int next[2], int pre[2])
+{
+	if (next[0] < 0 || next[0] >= n || next[1] < 0 || next[1] >= m)
+		return false;
+
+	if (next[0] == pre[0] && next[1] == pre[1])
+		return false;
+
+	if (k < 0)
+		return false;
+
+	if (*(a + next[0] * m + next[1]) == 'S')
+		return false;
+
+	return true;
+}
+
+void print_path(char *path)
+{
+	if (strlen(minipath) == 1 && minipath[0] == 'S')
+		printf("\n");
+	else
+		for (int i = 1; i < strlen(path); i++)
+			printf("%c", path[i]);
+}
+
+void dfs_jump(char *a, int n, int m, int k, int cur[2], int pre[2],
+	      char *path, int idx)
+{
+	if (*(a + cur[0] * m + cur[1]) == 'T') {
+		*(path + idx) = '\0';
+		if (strcmp(minipath, path) > 0)
+			strncpy(minipath, path, strlen(path) + 1);
+		return;
+	}
+
+	*(path + idx) = *(a + cur[0] * m + cur[1]);
+
+	int direct[4][2] = {{ 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }};
+
+	int next[2];
+	for (int i = 0; i < 4; i++) {
+		next[0] = cur[0] + direct[i][0];
+		next[1] = cur[1] + direct[i][1];
+		if (jump_canPass(a, n, m, k, next, pre)) {
+			int flag = 1; //indicate next is same as cur
+			if ((*(a + next[0] * m + next[1]))
+				 != (*(a + cur[0] * m + cur[1])))
+				flag = 0;
+			dfs_jump(a, n, m, (flag ? k : k - 1), next, cur, path, idx + 1);
+		}
+	}
+	*(path + idx) = '\0';
+}
+
+int jumpGame()
+{
+    // please define the C input here. For example: int n; scanf("%d",&n);
+	int n, m, k;
+	scanf("%d %d %d", &n, &m, &k);
+
+	char array[n][m];
+	char path[n * m + 1];
+	char str[m + 1];
+	char v;
+	char *a;
+	int start[2];
+
+	for (int i = 0; i < n; i++) {
+	    scanf("%s", str);
+	    for (int j = 0; j < m; j++) {
+	        v = str[j];
+	        array[i][j] = v;
+	        if (v == 'S') {
+			start[0] = i;
+			start[1] = j;
+	        }
+	    }
+	}
+
+	a = &array[0][0];
+
+	dfs_jump(a, n, m, k, start, start, path, 0);
+	print_path(minipath);
+
+	return 0;
+}
