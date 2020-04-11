@@ -1,7 +1,7 @@
 PROGRAM := main
 SRCS := $(wildcard *.c)
 OBJS := ${SRCS:.c=.o}
-CFLAGS=-g -std=gnu99 -Wall
+CFLAGS=-g -std=gnu99
 
 
 $(PROGRAM): $(OBJS)
