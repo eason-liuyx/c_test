@@ -2212,3 +2212,53 @@ int jumpGame()
 
 	return 0;
 }
+
+#define max_n 100
+#define max_people 10000
+int maxGold[max_people][max_n];
+int peopleNeed[max_n];
+int gold[max_n];
+// the max gold when people number is people and privious mineNum gold mines
+int get_max_gold(int people, int mineNum)
+{
+	int ret_maxgold;
+
+	if (maxGold[people][mineNum] != -1)
+		ret_maxgold = maxGold[people][mineNum];
+	else if (mineNum == 0) {
+		if (people >= peopleNeed[mineNum]) {
+			ret_maxgold = gold[mineNum];
+		}
+		else
+			ret_maxgold = 0;
+	}
+	else if (people > peopleNeed[mineNum]) {
+		ret_maxgold = max(get_max_gold(people - peopleNeed[mineNum], mineNum - 1) + gold[mineNum],
+						  get_max_gold(people, mineNum - 1));
+	}
+	else {
+		ret_maxgold = get_max_gold(people, mineNum - 1);
+	}
+
+	maxGold[people][mineNum] = ret_maxgold;
+	return ret_maxgold;
+}
+
+void dig_gold()
+{
+	int n, peopleTotal;
+
+	scanf("%d %d", &peopleTotal, &n);
+
+	for (int i = 0; i < n; i++) {
+		scanf("%d %d", &peopleNeed[i], &gold[i]);
+	}
+
+	for (int i = 0; i <= peopleTotal; i++) {
+		for (int j = 0; j < n; j++) {
+			maxGold[i][j] = -1;
+		}
+	}
+
+	printf("%d", get_max_gold(peopleTotal, n - 1));
+}
