@@ -2262,3 +2262,46 @@ void dig_gold()
 
 	printf("%d", get_max_gold(peopleTotal, n - 1));
 }
+
+#define max_quest 21
+int ans_cnt = 0;
+char ans_st[max_quest];
+
+void get_score(int cur_n, int t_n, int cur_s, int t_s) {
+	if (cur_n == t_n + 1) {
+		if (cur_s == t_s) {
+			ans_cnt++;
+			printf("%s\n", ans_st);
+		}
+
+		return;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		if (j == 0) {
+			ans_st[cur_n] = 'x';
+			get_score(cur_n + 1, t_n, cur_s - cur_n, t_s);
+		}
+		else {
+			ans_st[cur_n] = '1';
+			get_score(cur_n + 1, t_n, 2 * cur_s, t_s);
+		}
+	}
+}
+
+int strangeGame()
+{
+	int n; // question num
+	int s; // total_score
+
+	int start_score = 10;
+
+	ans_st[0] = ' ';
+	scanf("%d %d", &n, &s);
+
+	get_score(1, n, 10, s);
+
+	printf("%d\n", ans_cnt);
+
+	return 0;
+}

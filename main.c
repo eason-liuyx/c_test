@@ -390,7 +390,7 @@ void test_collectCoin()
 
 int main() {
 
-	dig_gold();
+	strangeGame();
 
 	return 0;
 }
