@@ -352,50 +352,9 @@ void test_rotateMatrix() {
 	}
 }
 
-	void test_deleteOrder() {
-	deleteOrder();
-}
-
-void test_scenceDistance()
-{
-	int ret;
-	ret = scenceDistance();
-	printf("%d\n", ret);
-}
-
-void test_closeLight()
-{
-	closeLight();
-}
-
-void test_carryNum()
-{
-	carryNum();
-}
-
-void test_fobric()
-{
-	calcFobric();
-}
-
-void test_mergechar()
-{
-	mergeChar();
-}
-
-void test_collectCoin()
-{
-	collectCoins();
-}
-
 int main() {
 
 	strangeGame();
 
 	return 0;
 }
-
-
-
-
-
