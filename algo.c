@@ -1806,7 +1806,7 @@ int mergeChar()
 int coin_num = 0;
 int visit_num = 1;
 
-bool coin_canpass(char *a, int cur[2], int pre[2], int r, int c, int * v_flag)
+static bool coin_canpass(char *a, int cur[2], int pre[2], int r, int c, int * v_flag)
 {
 	if (*(v_flag + cur[0] * c + cur[1]) == 1)
 		return false;
@@ -1847,7 +1847,7 @@ bool coin_canpass(char *a, int cur[2], int pre[2], int r, int c, int * v_flag)
 }
 
 
-void coin_dfs(char *a, int i, int j, int pre[2], int r, int c, int* v_flag) {
+static void coin_dfs(char *a, int i, int j, int pre[2], int r, int c, int* v_flag) {
 	int cur[2];
 	cur[0] = i;
 	cur[1] = j;
@@ -2031,7 +2031,7 @@ loop:
 }
 
 int fill_flag = 0;
-void dfs_fill(int *w, int n, int idx, int sum, int target)
+static void dfs_fill(int *w, int n, int idx, int sum, int target)
 {
 	if (target == sum && fill_flag == 0) {
 		fill_flag = 1;
@@ -2072,7 +2072,7 @@ void fillPacket()
 	return;
 }
 
-int findroot(int x, int *pre)
+static int findroot(int x, int *pre)
 {
 	int r = x;
 	while (pre[r] != r)
@@ -2089,7 +2089,7 @@ int findroot(int x, int *pre)
 	return r;
 }
 
-int join(int x, int y, int *pre)
+static int join(int x, int y, int *pre)
 {
 	int fx = findroot(x, pre), fy = findroot(y, pre);
 	int ret = 0;
@@ -2125,7 +2125,7 @@ void cityRoad()
 
 char minipath[200] = "T";
 
-bool jump_canPass(char *a, int n, int m, int k, int next[2], int pre[2])
+static bool jump_canPass(char *a, int n, int m, int k, int next[2], int pre[2])
 {
 	if (next[0] < 0 || next[0] >= n || next[1] < 0 || next[1] >= m)
 		return false;
@@ -2142,7 +2142,7 @@ bool jump_canPass(char *a, int n, int m, int k, int next[2], int pre[2])
 	return true;
 }
 
-void print_path(char *path)
+static void print_path(char *path)
 {
 	if (strlen(minipath) == 1 && minipath[0] == 'S')
 		printf("\n");
@@ -2151,7 +2151,7 @@ void print_path(char *path)
 			printf("%c", path[i]);
 }
 
-void dfs_jump(char *a, int n, int m, int k, int cur[2], int pre[2],
+static void dfs_jump(char *a, int n, int m, int k, int cur[2], int pre[2],
 	      char *path, int idx)
 {
 	if (*(a + cur[0] * m + cur[1]) == 'T') {
@@ -2219,7 +2219,7 @@ int maxGold[max_people][max_n];
 int peopleNeed[max_n];
 int gold[max_n];
 // the max gold when people number is people and privious mineNum gold mines
-int get_max_gold(int people, int mineNum)
+static int get_max_gold(int people, int mineNum)
 {
 	int ret_maxgold;
 
@@ -2267,7 +2267,7 @@ void dig_gold()
 int ans_cnt = 0;
 char ans_st[max_quest];
 
-void get_score(int cur_n, int t_n, int cur_s, int t_s) {
+static void get_score(int cur_n, int t_n, int cur_s, int t_s) {
 	if (cur_n == t_n + 1) {
 		if (cur_s == t_s) {
 			ans_cnt++;
