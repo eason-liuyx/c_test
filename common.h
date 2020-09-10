@@ -74,3 +74,4 @@ void cityRoad();
 int jumpGame();
 void dig_gold();
 int strangeGame();
+int strangeGame2();

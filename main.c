@@ -354,7 +354,7 @@ void test_rotateMatrix() {
 
 int main() {
 
-	strangeGame();
+	strangeGame2();
 
 	return 0;
 }

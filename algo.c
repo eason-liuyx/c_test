@@ -2305,3 +2305,30 @@ int strangeGame()
 
 	return 0;
 }
+
+
+#define Max_Qnum 21
+#define Max_Score 3000
+int gam_score[Max_Qnum][Max_Score];
+// use dynamic programming
+int strangeGame2()
+{
+	int n, s;
+
+	scanf("%d %d", &n, &s);
+	memset(gam_score, 0, sizeof(gam_score));
+
+	gam_score[0][10] = 1;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < Max_Score; j++) {
+			if (gam_score[i - 1][j]) {
+				gam_score[i][j - i] += gam_score[i - 1][j];
+				gam_score[i][2 * j] += gam_score[i - 1][j];
+			}
+		}
+	}
+
+	printf("%d", gam_score[n][s]);
+	return 0;
+}
