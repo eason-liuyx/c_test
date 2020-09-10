@@ -1828,10 +1828,10 @@ static bool coin_canpass(char *a, int cur[2], int pre[2], int r, int c, int * v_
 		visit_num++;
 		if (i >= 0 && i < r && j >= 0 && j < c &&
 		    *(a + i * c + j) == '.') {
-			*(a + i * c + j) == 'X';
+			*(a + i * c + j) = 'X';
 			return true;
 		} else {
-			*(a + cur[0] * c + cur[1]) == 'X'; 
+			*(a + cur[0] * c + cur[1]) = 'X'; 
 			return false;
 		}
 	}
